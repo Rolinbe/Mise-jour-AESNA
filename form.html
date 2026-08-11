@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html class="light" lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Saisie des Données</title>
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Configuration -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#d8e2ff",
+                        "tertiary-fixed": "#dae3ee",
+                        "inverse-on-surface": "#edf0ff",
+                        "background": "#faf9ff",
+                        "surface-container-low": "#f1f3ff",
+                        "tertiary-fixed-dim": "#bec7d2",
+                        "surface-container-highest": "#d8e2ff",
+                        "secondary": "#535f73",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#dae2ff",
+                        "on-tertiary-container": "#cbd4df",
+                        "primary": "#003d9b",
+                        "outline-variant": "#c3c6d6",
+                        "on-primary-fixed": "#001848",
+                        "on-error": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface": "#faf9ff",
+                        "surface-container": "#e9edff",
+                        "on-secondary-fixed-variant": "#3b475b",
+                        "on-surface": "#051a3e",
+                        "surface-container-high": "#e1e8ff",
+                        "surface-dim": "#ccdaff",
+                        "primary-container": "#0052cc",
+                        "tertiary-container": "#535c65",
+                        "secondary-fixed": "#d7e3fb",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#0040a2",
+                        "on-secondary-container": "#576377",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "secondary-container": "#d4e0f8",
+                        "on-tertiary-fixed": "#141c24",
+                        "on-secondary-fixed": "#101c2d",
+                        "error": "#ba1a1a",
+                        "inverse-surface": "#1d3054",
+                        "on-surface-variant": "#434654",
+                        "on-primary-container": "#c4d2ff",
+                        "tertiary": "#3c454d",
+                        "inverse-primary": "#b2c5ff",
+                        "surface-tint": "#0c56d0",
+                        "secondary-fixed-dim": "#bbc7de",
+                        "outline": "#737685",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#051a3e",
+                        "surface-bright": "#faf9ff",
+                        "on-tertiary-fixed-variant": "#3f4850"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "gutter": "24px",
+                        "container-max-width": "1200px",
+                        "form-max-width": "640px",
+                        "md": "16px",
+                        "form-group-gap": "24px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "helper-text": [
+                            "Inter"
+                        ],
+                        "label-md": [
+                            "Inter"
+                        ],
+                        "body-md": [
+                            "Inter"
+                        ],
+                        "body-lg": [
+                            "Inter"
+                        ],
+                        "headline-sm": [
+                            "Inter"
+                        ],
+                        "label-bold": [
+                            "Inter"
+                        ],
+                        "display-lg": [
+                            "Inter"
+                        ],
+                        "headline-md": [
+                            "Inter"
+                        ]
+                    },
+                    "fontSize": {
+                        "helper-text": [
+                            "12px",
+                            {
+                                "lineHeight": "16px",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "label-md": [
+                            "12px",
+                            {
+                                "lineHeight": "16px",
+                                "fontWeight": "500"
+                            }
+                        ],
+                        "body-md": [
+                            "14px",
+                            {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "body-lg": [
+                            "16px",
+                            {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "headline-sm": [
+                            "20px",
+                            {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "label-bold": [
+                            "12px",
+                            {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "display-lg": [
+                            "32px",
+                            {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                            }
+                        ],
+                        "headline-md": [
+                            "24px",
+                            {
+                                "lineHeight": "32px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                            }
+                        ]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Custom Input Styles */
+        .ds-input {
+            border: 1px solid #c3c6d6;
+            background-color: #faf9ff;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .ds-input:focus {
+            border-color: #003d9b;
+            box-shadow: 0 0 0 1px #003d9b;
+            background-color: #ffffff;
+            outline: none;
+        }
+
+        /* Custom Dropzone Styles */
+        .ds-dropzone {
+            border: 1.5px dashed #c3c6d6;
+            transition: all 0.2s ease;
+            background-color: #faf9ff;
+        }
+
+        .ds-dropzone:hover {
+            border-color: #003d9b;
+            background-color: #f1f3ff;
+        }
+
+        .ds-dropzone.dragover {
+            background-color: #f1f3ff;
+            border-color: #003d9b;
+        }
+    </style>
+</head>
+
+<body class="bg-surface-container-low text-on-surface font-body-md min-h-screen flex flex-col antialiased">
+    <!-- Main Content Canvas -->
+    <main class="flex-grow w-full py-16 px-md md:px-lg flex flex-col items-center justify-start">
+        <!-- Header Section -->
+        <div class="w-full max-w-form-max-width mb-8 text-center">
+            <div class="flex justify-center mb-6"><img
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCweRBD9zxU-sH0HyQHIdWJ6-HON5zNJBAT2maJnd_eC8WyZaDTXqMK1erEU43_viYMzJhugNXJVB9uRCSk7uWDQpxUDiDptRUyayQFgV9RWPHoTuOy_deFTidDeuK_EjvG8-AMoAPdASqPCDkovdYFb1uY1PoW82AvqSiwnLsSemgdEN3YI0FozWepvEhzdXkOsv8Tce2LBhB66wgTzx7rz0b5XoDw__RrKoJWIgLsbkn-J6uCNQdCacTtUZ_2XFYNrA"
+                    alt="AESNA Logo" class="h-24 w-auto object-contain"></div>
+            <h1 class="font-headline-md text-headline-md text-primary mb-2">Saisie des Données Étudiant</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant">Veuillez remplir tous les champs obligatoires
+                pour finaliser votre mise à jours.</p>
+        </div>
+        <!-- Form Container -->
+        <div
+            class="w-full max-w-form-max-width bg-surface-container-lowest border border-outline-variant rounded-xl shadow-[0_4px_24px_rgba(5,26,62,0.04)] overflow-hidden mb-16">
+            <form class="p-8 md:p-10 flex flex-col gap-10" action="http://localhost:3000/submit" method="POST" enctype="multipart/form-data">
+                <!-- Section 1: Identification -->
+                <section class="flex flex-col gap-6">
+                    <h2
+                        class="font-label-bold text-label-bold text-secondary uppercase tracking-widest border-b border-surface-variant pb-3">
+                        Identification</h2>
+                    <p class="text-helper-text font-helper-text text-outline mt-2">Au moins l'un des deux (N° CE 1 ou 2)
+                        est obligatoire.</p>
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="flex-1 flex flex-col gap-2">
+                            <label class="font-label-md text-label-md text-on-surface" for="ce1">N° CE 1 <span
+                                    class="text-error ml-1">*</span></label>
+                            <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full" id="ce1"
+                                name="ce1" required="" type="text">
+                        </div>
+                        <div class="flex-1 flex flex-col gap-2">
+                            <label class="font-label-md text-label-md text-on-surface" for="ce2">N° CE 2 </label>
+                            <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full" id="ce2"
+                                name="ce2" type="text">
+                        </div>
+                    </div>
+                </section>
+                <!-- Section 2: Coordonnées -->
+                <section class="flex flex-col gap-6">
+                    <h2
+                        class="font-label-bold text-label-bold text-secondary uppercase tracking-widest border-b border-surface-variant pb-3">
+                        Coordonnées</h2>
+                    <div class="flex flex-col gap-2">
+                        <label class="font-label-md text-label-md text-on-surface" for="adresse">Adresse <span
+                                class="text-error ml-1">*</span></label>
+                        <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full" id="adresse"
+                            name="adresse" type="text" required="" placeholder="ex: Batiment, Préfat ..">
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="font-label-md text-label-md text-on-surface" for="adresse_exacte">Adresse exacte
+                            <span class="text-error ml-1">*</span></label>
+                        <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full"
+                            id="adresse_exacte" name="adresse_exacte" type="text" required="" placeholder="ex: A200, B403">
+                    </div>
+                    <p class="text-helper-text font-helper-text text-outline mb-2">Au moins l'un des deux numéros est
+                        obligatoire.</p>
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="flex-1 flex flex-col gap-2">
+                            <label class="font-label-md text-label-md text-on-surface" for="tel1">Numéro téléphone 1
+                                <span class="text-error ml-1">*</span></label>
+                            <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full" id="tel1"
+                                name="tel1" type="tel" required="">
+                        </div>
+                        <div class="flex-1 flex flex-col gap-2">
+                            <label class="font-label-md text-label-md text-on-surface" for="tel2">Numéro téléphone 2
+                            </label>
+                            <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full" id="tel2"
+                                name="tel2" type="tel">
+                        </div>
+                    </div>
+                </section>
+                <!-- Section 3: Établissement -->
+                <section class="flex flex-col gap-6">
+                    <h2
+                        class="font-label-bold text-label-bold text-secondary uppercase tracking-widest border-b border-surface-variant pb-3">
+                        Établissement</h2>
+                    <p class="text-helper-text font-helper-text text-outline mt-2">Au moins l'un des deux établissements
+                        est obligatoire.</p>
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="flex-1 flex flex-col gap-2 relative">
+                            <label class="font-label-md text-label-md text-on-surface"
+                                for="etablissement1">Établissement 1 <span class="text-error ml-1">*</span></label>
+                            <div class="relative">
+                                <select
+                                    class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full appearance-none pr-10"
+                                    id="etablissement1" name="etablissement1" required="">
+                                    <option value="">Sélectionner...</option>
+                                    <option value="1">Lycée A</option>
+                                    <option value="2">Lycée B</option>
+                                </select>
+                                <span
+                                    class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none"
+                                    data-icon="expand_more">expand_more</span>
+                            </div>
+                        </div>
+                        <div class="flex-1 flex flex-col gap-2 relative">
+                            <label class="font-label-md text-label-md text-on-surface"
+                                for="etablissement2">Établissement 2 </label>
+                            <div class="relative">
+                                <select
+                                    class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full appearance-none pr-10"
+                                    id="etablissement2" name="etablissement2">
+                                    <option value="">Sélectionner...</option>
+                                    <option value="1">Université X</option>
+                                    <option value="2">Université Y</option>
+                                </select>
+                                <span
+                                    class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none"
+                                    data-icon="expand_more">expand_more</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Section 4: Académique -->
+                <section class="flex flex-col gap-6">
+                    <h2
+                        class="font-label-bold text-label-bold text-secondary uppercase tracking-widest border-b border-surface-variant pb-3">
+                        Académique</h2>
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="flex-1 flex flex-col gap-2">
+                            <label class="font-label-md text-label-md text-on-surface" for="mention">Mention <span
+                                    class="text-error ml-1">*</span></label>
+                            <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full"
+                                id="mention" name="mention" type="text" required="">
+                        </div>
+                        <div class="flex-1 flex flex-col gap-2 relative">
+                            <label class="font-label-md text-label-md text-on-surface" for="niveau">Niveau <span
+                                    class="text-error ml-1">*</span></label>
+                            <div class="relative">
+                                <select
+                                    class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full appearance-none pr-10"
+                                    id="niveau" name="niveau" required="">
+                                    <option value="">Sélectionner le niveau...</option>
+                                    <option value="l1">Licence 1</option>
+                                    <option value="l2">Licence 2</option>
+                                    <option value="l3">Licence 3</option>
+                                    <option value="m1">Master 1</option>
+                                    <option value="m2">Master 2</option>
+                                </select>
+                                <span
+                                    class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none"
+                                    data-icon="expand_more">expand_more</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Section 5: Documents -->
+                <section class="flex flex-col gap-6">
+                    <h2
+                        class="font-label-bold text-label-bold text-secondary uppercase tracking-widest border-b border-surface-variant pb-3">
+                        Documents</h2>
+                    <div class="flex flex-col gap-3">
+                        <label class="font-label-md text-label-md text-on-surface">Pièces jointes</label>
+                        <div class="ds-dropzone rounded-xl p-12 flex flex-col items-center justify-center cursor-pointer text-center group"
+                            id="upload-zone">
+                            <div
+                                class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center mb-4 group-hover:bg-primary-fixed transition-colors">
+                                <span class="material-symbols-outlined text-primary text-2xl"
+                                    data-icon="upload_file">upload_file</span>
+                            </div>
+                            <p class="font-label-md text-label-md text-on-surface mb-1">Glissez et déposez vos images
+                                ici, si vous voulez mettre à jours votre photo de profile</p>
+                            <p class="font-helper-text text-helper-text text-outline mb-6">Formats acceptés: JPG, PNG,
+                                PDF (Max 5MB)</p>
+                            <button
+                                class="font-label-md text-label-md text-primary bg-surface-container-lowest px-6 py-2.5 rounded-md border border-outline-variant hover:border-primary hover:bg-surface-container-low transition-all"
+                                type="button">Parcourir les fichiers</button>
+                            <input accept="image/*,.pdf" class="hidden" id="file-input" multiple="" name="photo"
+                                type="file">
+                            <div class="w-full max-w-xs hidden mt-6" id="upload-progress">
+                                <div class="w-full bg-surface-container rounded-full h-2.5 mb-2 overflow-hidden">
+                                    <div class="bg-primary rounded-full h-2.5 transition-none" id="progress-bar"
+                                        style="width: 0%;"></div>
+                                </div>
+                                <p class="font-helper-text text-helper-text text-outline text-center"
+                                    id="progress-text">Préparation…</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Form Actions -->
+                <div class="flex justify-end gap-4 pt-8 border-t border-surface-variant mt-4">
+                    <button
+                        class="px-6 py-2.5 rounded-md bg-transparent text-secondary font-label-md text-label-md hover:bg-surface-container-low transition-colors focus:ring-2 focus:ring-secondary focus:outline-none"
+                        type="button">
+                        Annuler
+                    </button>
+                    <button
+                        class="px-6 py-2.5 rounded-md bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-colors focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none shadow-sm"
+                        type="submit">
+                        Soumettre le formulaire
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <div class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" id="modal-succes">
+        <div
+            class="bg-surface-container-lowest rounded-xl shadow-[0_8px_32px_rgba(5,26,62,0.2)] p-8 max-w-sm w-full text-center">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCweRBD9zxU-sH0HyQHIdWJ6-HON5zNJBAT2maJnd_eC8WyZaDTXqMK1erEU43_viYMzJhugNXJVB9uRCSk7uWDQpxUDiDptRUyayQFgV9RWPHoTuOy_deFTidDeuK_EjvG8-AMoAPdASqPCDkovdYFb1uY1PoW82AvqSiwnLsSemgdEN3YI0FozWepvEhzdXkOsv8Tce2LBhB66wgTzx7rz0b5XoDw__RrKoJWIgLsbkn-J6uCNQdCacTtUZ_2XFYNrA"
+                alt="AESNA Logo" class="h-20 w-auto object-contain mx-auto mb-4">
+            <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Inscription réussie !</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-6">Vos données ont bien été enregistrées.</p>
+            <button id="btn-fermer-succes"
+                class="px-6 py-2.5 rounded-md bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">
+                Fermer
+            </button>
+        </div>
+    </div>
+    <div class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" id="modal-erreur">
+        <div
+            class="bg-surface-container-lowest rounded-xl shadow-[0_8px_32px_rgba(5,26,62,0.2)] p-8 max-w-sm w-full text-center">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCweRBD9zxU-sH0HyQHIdWJ6-HON5zNJBAT2maJnd_eC8WyZaDTXqMK1erEU43_viYMzJhugNXJVB9uRCSk7uWDQpxUDiDptRUyayQFgV9RWPHoTuOy_deFTidDeuK_EjvG8-AMoAPdASqPCDkovdYFb1uY1PoW82AvqSiwnLsSemgdEN3YI0FozWepvEhzdXkOsv8Tce2LBhB66wgTzx7rz0b5XoDw__RrKoJWIgLsbkn-J6uCNQdCacTtUZ_2XFYNrA"
+                alt="AESNA Logo" class="h-20 w-auto object-contain mx-auto mb-3">
+            <div class="w-16 h-16 rounded-full bg-[#ffdad6] flex items-center justify-center mx-auto mb-4">
+                <span class="material-symbols-outlined text-[#93000a] text-4xl">error</span>
+            </div>
+            <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Erreur lors de la saisie</h2>
+            <div id="liste-erreurs" class="font-body-md text-body-md text-left text-[#93000a] mb-6"></div>
+            <button id="btn-fermer-erreur"
+                class="px-6 py-2.5 rounded-md bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">
+                Fermer
+            </button>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer class="bg-surface-container-lowest w-full border-t border-outline-variant py-8 mt-auto">
+        <div
+            class="flex flex-col md:flex-row justify-between items-center w-full px-lg max-w-container-max-width mx-auto gap-6">
+            <div class="flex flex-col items-center md:items-start text-secondary gap-1">
+                <span class="font-label-bold text-label-bold text-primary tracking-wide" style="font-size: 20px;">Ho ela
+                    velogna AESNA</span>
+
+
+            </div>
+            <nav class="flex gap-6"><img
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnlFifWiZ_Wu__FqmdnW0v_4bscoopXqxQ_G--dkFVc4Wthe40OXkOaSCLI25yrC0s9_UpXZo6m6BSYvGxUzfcXpfkhjsrBjs67kKJJr6UGbtPG-ymjp3-Sj1eayZFFFPbGNiXfMPd7vWsAmW4EDiUdkNqoqSZqM7GQVR7nGlJGhUwrNhJmSLzjeZ1VEWBJpIh-Zdb4QH2PHi7_h3vFv2BtV3JyzE7JEZgNV0kcZlTxz85gdLnyYwhHgkdg2Be10Rlvw"
+                    alt="AESNA Logo" class="h-12 w-auto object-contain"></nav>
+        </div>
+    </footer>
+    <script>
+        const dropzone = document.getElementById('upload-zone');
+        const fileInput = document.getElementById('file-input');
+        const progressWrap = document.getElementById('upload-progress');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const form = document.querySelector('form');
+        const API_URL = 'http://localhost:3000/submit';
+        let selectedFiles = [];
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function highlight(e) {
+            dropzone.classList.add('dragover');
+        }
+
+        function unhighlight(e) {
+            dropzone.classList.remove('dragover');
+        }
+
+        function animerProgressBar(cible, duree, onDone) {
+            progressWrap.classList.remove('hidden');
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+            progressText.textContent = '0%';
+            const debut = performance.now();
+            function etape(now) {
+                const p = Math.min((now - debut) / duree, 1);
+                const eased = 1 - Math.pow(1 - p, 3);
+                progressBar.style.transition = 'width 0.15s linear';
+                progressBar.style.width = Math.round(eased * cible) + '%';
+                progressText.textContent = Math.round(eased * cible) + '%';
+                if (p < 1) requestAnimationFrame(etape);
+                else if (onDone) onDone();
+            }
+            requestAnimationFrame(etape);
+        }
+
+        function gérerFichiers(files) {
+            const max = 5 * 1024 * 1024;
+            const tropGros = [];
+            const liste = [];
+            Array.from(files).forEach(f => {
+                if (f.size > max) tropGros.push(f.name);
+                else liste.push(f);
+            });
+            selectedFiles = liste;
+            if (tropGros.length > 0) {
+                progressWrap.classList.remove('hidden');
+                progressText.textContent = tropGros.length + ' fichier(s) trop volumineux (max 5 Mo)';
+            }
+            if (selectedFiles.length === 0) return;
+            animerProgressBar(100, 1200, () => {
+                const textEl = dropzone.querySelector('.font-label-md');
+                textEl.textContent = `${selectedFiles.length} fichier(s) prêt(s) à l'envoi`;
+                textEl.classList.add('text-primary');
+                progressText.textContent = 'Prêt';
+            });
+        }
+
+        if (dropzone && fileInput) {
+            dropzone.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, unhighlight, false);
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                gérerFichiers(e.dataTransfer.files);
+            }, false);
+
+            fileInput.addEventListener('change', function () {
+                gérerFichiers(this.files);
+            });
+        }
+
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const bouton = form.querySelector('button[type="submit"]');
+                bouton.disabled = true;
+                bouton.textContent = 'Envoi en cours…';
+
+                const fd = new FormData(form);
+                if (selectedFiles.length > 0) {
+                    fd.delete('photo');
+                    fd.append('photo', selectedFiles[0]);
+                }
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', API_URL);
+
+                if (selectedFiles.length > 0) {
+                    progressWrap.classList.remove('hidden');
+                    progressText.textContent = 'Téléversement…';
+                    xhr.upload.onprogress = function (ev) {
+                        if (ev.lengthComputable) {
+                            const p = Math.round((ev.loaded / ev.total) * 100);
+                            progressBar.style.transition = 'width 0.15s linear';
+                            progressBar.style.width = p + '%';
+                            progressText.textContent = p + '%';
+                        }
+                    };
+                }
+
+                xhr.onload = function () {
+                    const docTemp = document.createElement('div');
+                    docTemp.innerHTML = xhr.responseText;
+                    const erreurs = Array.from(docTemp.querySelectorAll('.err')).map(e => e.textContent);
+                    if (xhr.status === 200 && erreurs.length === 0) {
+                        form.closest('.w-full.max-w-form-max-width').classList.add('hidden');
+                        document.getElementById('modal-succes').classList.remove('hidden');
+                    } else {
+                        const liste = document.getElementById('liste-erreurs');
+                        liste.innerHTML = '';
+                        const messages = erreurs.length > 0
+                            ? erreurs
+                            : ['Erreur serveur (' + xhr.status + '). Réessayez.'];
+                        messages.forEach(msg => {
+                            const p = document.createElement('p');
+                            p.className = 'mb-2';
+                            p.textContent = '• ' + msg;
+                            liste.appendChild(p);
+                        });
+                        document.getElementById('modal-erreur').classList.remove('hidden');
+                        bouton.disabled = false;
+                        bouton.textContent = 'Soumettre le formulaire';
+                    }
+                };
+
+                xhr.onerror = function () {
+                    alert('Erreur réseau. Le serveur Node doit tourner sur http://localhost:3000.');
+                    bouton.disabled = false;
+                    bouton.textContent = 'Soumettre le formulaire';
+                };
+
+                xhr.send(fd);
+            });
+
+            document.getElementById('btn-fermer-succes').addEventListener('click', () => {
+                window.location.reload();
+            });
+            document.getElementById('btn-fermer-erreur').addEventListener('click', () => {
+                document.getElementById('modal-erreur').classList.add('hidden');
+            });
+        }
+    </script>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
