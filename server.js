@@ -115,7 +115,7 @@ app.use(express.static(__dirname));
 app.use((err, req, res, next) => {
     if (err instanceof multer.MulterError) {
         if (err.code === 'LIMIT_FILE_SIZE') {
-            return res.status(400).send(resultPage(false, ['Le fichier dépasse la taille maximale de 5 Mo.']));
+            return res.status(400).send(resultPage(false, ['Le fichier dépasse la taille maximale de 4 Mo.']));
         }
         return res.status(400).send(resultPage(false, ["Erreur d'upload : " + err.message]));
     }
