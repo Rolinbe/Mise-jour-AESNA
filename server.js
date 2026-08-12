@@ -3,9 +3,19 @@ const mysql = require('mysql2/promise');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
+    },
+});
 
 const pool = mysql.createPool({
     host: 'localhost',
@@ -93,6 +103,28 @@ app.post('/submit', upload.single('photo'), async (req, res) => {
                     mention, niveau, photo,
                 ]
             );
+
+            const niveaux = { l1: 'Licence 1', l2: 'Licence 2', l3: 'Licence 3', m1: 'Master 1', m2: 'Master 2' };
+            const [etabs] = await pool.query('SELECT id, nom, type FROM etablissements');
+            const nomsEtabs = {};
+            etabs.forEach(e => { nomsEtabs[e.id] = `${e.nom} (${e.type})`; });
+
+            const infos = {
+                ce1: ce1, ce2: ce2, adresse: adresse, adresse_exacte: adresse_exacte,
+                tel1: tel1, tel2: tel2, mention: mention,
+                niveau: niveaux[niveau] || niveau,
+                etablissement1: etablissement1 ? nomsEtabs[Number(etablissement1)] : null,
+                etablissement2: etablissement2 ? nomsEtabs[Number(etablissement2)] : null,
+                photo: photo,
+            };
+
+            try {
+                await envoyerNotification(infos);
+                console.log('E-mail de notification envoyé.');
+            } catch (mailErr) {
+                console.error('Échec de l\'envoi de l\'e-mail :', mailErr.message);
+            }
+
             return res.send(resultPage(true, []));
         } catch (err) {
             console.error('Erreur insertion :', err);
@@ -121,6 +153,109 @@ app.use((err, req, res, next) => {
     }
     next();
 });
+
+async function envoyerNotification(infos) {
+    const LOGO_URL = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCweRBD9zxU-sH0HyQHIdWJ6-HON5zNJBAT2maJnd_eC8WyZaDTXqMK1erEU43_viYMzJhugNXJVB9uRCSk7uWDQpxUDiDptRUyayQFgV9RWPHoTuOy_deFTidDeuK_EjvG8-AMoAPdASqPCDkovdYFb1uY1PoW82AvqSiwnLsSemgdEN3YI0FozWepvEhzdXkOsv8Tce2LBhB66wgTzx7rz0b5XoDw__RrKoJWIgLsbkn-J6uCNQdCacTtUZ_2XFYNrA';
+
+    const carte = (titre, lignes) => `
+        <div style="background:#faf9ff;border:1px solid #e1e8ff;border-radius:12px;margin-bottom:16px;padding:16px 20px;">
+            <div style="font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#003d9b;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e1e8ff;">${titre}</div>
+            ${lignes}
+        </div>`;
+
+    const item = (label, valeur) => `
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:14px;">
+            <span style="color:#434654;">${label}</span>
+            <span style="color:#051a3e;font-weight:600;text-align:right;padding-left:12px;">${valeur}</span>
+        </div>`;
+
+    const secu = v => escapeHtml(v || '—');
+    const attachments = [];
+
+    const html = `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#e9edff;font-family:Arial,Helvetica,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#e9edff;padding:24px 12px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #d8e2ff;box-shadow:0 8px 24px rgba(5,26,62,0.08);">
+                    <tr>
+                        <td style="background:#003d9b;padding:28px 24px;text-align:center;">
+                            <img src="${LOGO_URL}" alt="AESNA" width="90" style="display:block;margin:0 auto 12px;border-radius:12px;">
+                            <div style="font-size:20px;font-weight:bold;color:#ffffff;letter-spacing:0.5px;">Nouvelle inscription</div>
+                            <div style="font-size:13px;color:#c4d2ff;margin-top:4px;">Association des Étudiants</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:24px;">
+                            <p style="font-size:14px;color:#051a3e;margin:0 0 20px;">Bonjour,<br>Une nouvelle inscription a été enregistrée dans le formulaire AESNA&nbsp;:</p>
+
+                            ${carte('Identification', item('N° CE 1', secu(infos.ce1)) + item('N° CE 2', secu(infos.ce2)))}
+
+                            ${carte('Coordonnées',
+                                item('Adresse', secu(infos.adresse)) +
+                                item('Adresse exacte', secu(infos.adresse_exacte)) +
+                                item('Téléphone 1', secu(infos.tel1)) +
+                                item('Téléphone 2', secu(infos.tel2)))}
+
+                            ${carte('Établissement',
+                                item('Établissement 1', secu(infos.etablissement1)) +
+                                item('Établissement 2', secu(infos.etablissement2)))}
+
+                            ${carte('Académique',
+                                item('Mention', secu(infos.mention)) +
+                                item('Niveau', secu(infos.niveau)))}
+
+                            <div style="background:#faf9ff;border:1px solid #e1e8ff;border-radius:12px;padding:16px 20px;">
+                                <div style="font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#003d9b;margin-bottom:10px;">Photo de profil</div>
+                                ${blocPhoto(infos, attachments)}
+                            </div>
+
+                            <p style="font-size:12px;color:#737685;text-align:center;margin:20px 0 0;">Inscription reçue le ${new Date().toLocaleString('fr-FR')}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background:#e9edff;padding:14px 24px;text-align:center;font-size:12px;color:#434654;">
+                            AESNA — Ho ela velogna AESNA
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`;
+
+    await transporter.sendMail({
+        from: process.env.MAIL_FROM,
+        to: process.env.MAIL_TO,
+        subject: `Nouvelle inscription AESNA — ${infos.ce1 || infos.ce2 || 'étudiant'}`,
+        text: 'Une nouvelle inscription a été enregistrée. Ouvrez cet e-mail au format HTML pour voir les détails et la photo.',
+        html: html,
+        attachments: attachments,
+    });
+}
+
+function blocPhoto(infos, attachments) {
+    if (!infos.photo) return '<p style="font-size:14px;color:#737685;margin:0;">Aucune photo fournie.</p>';
+
+    const chemin = path.join(__dirname, infos.photo);
+    const ext = path.extname(infos.photo).toLowerCase();
+    const nom = path.basename(infos.photo);
+
+    if (!fs.existsSync(chemin)) {
+        return '<p style="font-size:14px;color:#93000a;margin:0;">Fichier photo introuvable sur le serveur.</p>';
+    }
+
+    attachments.push({ filename: nom, path: chemin });
+
+    if (['.jpg', '.jpeg', '.png'].includes(ext)) {
+        attachments[attachments.length - 1].cid = 'photo@aesna';
+        return '<img src="cid:photo@aesna" alt="Photo de profil" width="200" style="display:block;max-width:220px;border-radius:12px;border:1px solid #d8e2ff;margin:0 auto;">';
+    }
+    return '<p style="font-size:14px;color:#737685;margin:0;">Photo au format PDF : disponible en pièce jointe ci-dessous.</p>';
+}
 
 function resultPage(success, errors) {
     const alertes = success
