@@ -1,8 +1,6 @@
 const express = require('express');
-const mysql = require('mysql2/promise');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
@@ -17,32 +15,9 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'rolin',
-    password: 'root',
-    database: 'aesna',
-    charset: 'utf8mb4',
-    waitForConnections: true,
-    connectionLimit: 10,
-});
-
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, uploadDir),
-    filename: (req, file, cb) => {
-        const ext = path.extname(file.originalname).toLowerCase();
-        cb(null, `photo_${Date.now()}_${Math.round(Math.random() * 1e9)}${ext}`);
-    },
-});
-
 const upload = multer({
-    storage,
-    limits: { fileSize: 5 * 1024 * 1024 },
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 4 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         const ok = ['.jpg', '.jpeg', '.png', '.pdf'].includes(path.extname(file.originalname).toLowerCase());
         if (!ok) return cb(new Error('Format non autorisé (JPG, PNG, PDF uniquement).'));
@@ -66,7 +41,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'form.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.post('/submit', upload.single('photo'), async (req, res) => {
@@ -85,59 +60,37 @@ app.post('/submit', upload.single('photo'), async (req, res) => {
 
     let photo = null;
     if (req.file) {
-        photo = `uploads/${req.file.filename}`;
+        photo = {
+            buffer: req.file.buffer,
+            originalname: req.file.originalname,
+            mimetype: req.file.mimetype,
+        };
     } else if (req.fileValidationError) {
         errors.push(req.fileValidationError);
     }
 
     if (errors.length === 0) {
+        const niveaux = { l1: 'Licence 1', l2: 'Licence 2', l3: 'Licence 3', m1: 'Master 1', m2: 'Master 2' };
+
+        const infos = {
+            nom: nom, prenom: prenom, ce1: ce1, ce2: ce2, adresse: adresse, adresse_exacte: adresse_exacte,
+            tel1: tel1, tel2: tel2, mention: mention,
+            niveau: niveaux[niveau] || niveau,
+            etablissement1: etablissement1 || null,
+            etablissement2: etablissement2 || null,
+            photo: photo,
+        };
+
         try {
-            await pool.query(
-                `INSERT INTO etudiants
-                 (nom, prenom, ce1, ce2, adresse, adresse_exacte, tel1, tel2, etablissement1, etablissement2, mention, niveau, photo)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                [
-                    nom, prenom,
-                    ce1 || null, ce2 || null,
-                    adresse, adresse_exacte,
-                    tel1 || null, tel2 || null,
-                    etablissement1 ? Number(etablissement1) : null,
-                    etablissement2 ? Number(etablissement2) : null,
-                    mention, niveau, photo,
-                ]
-            );
-
-            const niveaux = { l1: 'Licence 1', l2: 'Licence 2', l3: 'Licence 3', m1: 'Master 1', m2: 'Master 2' };
-            const [etabs] = await pool.query('SELECT id, nom, type FROM etablissements');
-            const nomsEtabs = {};
-            etabs.forEach(e => { nomsEtabs[e.id] = `${e.nom} (${e.type})`; });
-
-            const infos = {
-                nom: nom, prenom: prenom, ce1: ce1, ce2: ce2, adresse: adresse, adresse_exacte: adresse_exacte,
-                tel1: tel1, tel2: tel2, mention: mention,
-                niveau: niveaux[niveau] || niveau,
-                etablissement1: etablissement1 ? nomsEtabs[Number(etablissement1)] : null,
-                etablissement2: etablissement2 ? nomsEtabs[Number(etablissement2)] : null,
-                photo: photo,
-            };
-
-            try {
-                await envoyerNotification(infos);
-                console.log('E-mail de notification envoyé.');
-            } catch (mailErr) {
-                console.error('Échec de l\'envoi de l\'e-mail :', mailErr.message);
-            }
-
+            await envoyerNotification(infos);
+            console.log('E-mail de notification envoyé.');
             return res.send(resultPage(true, []));
         } catch (err) {
-            console.error('Erreur insertion :', err);
-            return res.send(resultPage(false, ["Erreur lors de l'enregistrement dans la base de données."]));
+            console.error('Échec de l\'envoi de l\'e-mail :', err.message);
+            return res.send(resultPage(false, ["L'inscription a bien été reçue mais l'e-mail de notification n'a pas pu être envoyé. Contactez l'administrateur."]));
         }
     }
 
-    if (req.file && errors.length > 0) {
-        fs.unlink(req.file.path, () => {});
-    }
     res.send(resultPage(false, errors));
 });
 
@@ -247,15 +200,10 @@ async function envoyerNotification(infos) {
 function blocPhoto(infos, attachments) {
     if (!infos.photo) return '<p style="font-size:14px;color:#737685;margin:0;">Aucune photo fournie.</p>';
 
-    const chemin = path.join(__dirname, infos.photo);
-    const ext = path.extname(infos.photo).toLowerCase();
-    const nom = path.basename(infos.photo);
+    const ext = path.extname(infos.photo.originalname).toLowerCase();
+    const nom = path.basename(infos.photo.originalname);
 
-    if (!fs.existsSync(chemin)) {
-        return '<p style="font-size:14px;color:#93000a;margin:0;">Fichier photo introuvable sur le serveur.</p>';
-    }
-
-    attachments.push({ filename: nom, path: chemin });
+    attachments.push({ filename: nom, content: infos.photo.buffer });
 
     if (['.jpg', '.jpeg', '.png'].includes(ext)) {
         attachments[attachments.length - 1].cid = 'photo@aesna';
@@ -266,7 +214,7 @@ function blocPhoto(infos, attachments) {
 
 function resultPage(success, errors) {
     const alertes = success
-        ? `<p class="ok">Les données de l'étudiant ont bien été enregistrées dans la base de données.</p>`
+        ? `<p class="ok">L'inscription a bien été reçue. Un e-mail de notification a été envoyé.</p>`
         : errors.map(e => `<p class="err">${escapeHtml(e)}</p>`).join('');
     return `<!DOCTYPE html>
 <html lang="fr">
@@ -300,6 +248,10 @@ function escapeHtml(str) {
     }[c]));
 }
 
-app.listen(PORT, () => {
-    console.log(`Serveur démarré sur http://localhost:${PORT}`);
-});
+module.exports = app;
+
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`Serveur démarré sur http://localhost:${PORT}`);
+    });
+}

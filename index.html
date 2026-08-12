@@ -490,7 +490,9 @@
         const progressBar = document.getElementById('progress-bar');
         const progressText = document.getElementById('progress-text');
         const form = document.querySelector('form');
-        const API_URL = 'http://localhost:3000/submit';
+        const API_URL = (location.port === '3000' || location.port === '')
+            ? '/submit'
+            : 'http://' + location.hostname + ':3000/submit';
         let selectedFiles = [];
 
         function preventDefaults(e) {
@@ -525,7 +527,7 @@
         }
 
         function gérerFichiers(files) {
-            const max = 5 * 1024 * 1024;
+            const max = 4 * 1024 * 1024;
             const tropGros = [];
             const liste = [];
             Array.from(files).forEach(f => {
@@ -535,7 +537,7 @@
             selectedFiles = liste;
             if (tropGros.length > 0) {
                 progressWrap.classList.remove('hidden');
-                progressText.textContent = tropGros.length + ' fichier(s) trop volumineux (max 5 Mo)';
+                progressText.textContent = tropGros.length + ' fichier(s) trop volumineux (max 4 Mo)';
             }
             if (selectedFiles.length === 0) return;
             animerProgressBar(100, 1200, () => {
@@ -627,7 +629,7 @@
                 };
 
                 xhr.onerror = function () {
-                    alert('Erreur réseau. Le serveur Node doit tourner sur http://localhost:3000.');
+                    alert('Erreur réseau. Vérifiez votre connexion puis réessayez.');
                     bouton.disabled = false;
                     bouton.textContent = 'Soumettre le formulaire';
                 };
