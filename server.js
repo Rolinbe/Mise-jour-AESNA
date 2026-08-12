@@ -44,8 +44,20 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-['logo.png', 'favicon.ico', 'favicon-32.png', 'apple-touch-icon.png'].forEach(f => {
-    app.get('/' + f, (req, res) => res.sendFile(path.join(__dirname, f)));
+app.get('/logo.png', (req, res) => {
+    res.sendFile(path.join(__dirname, 'logo.png'));
+});
+
+app.get('/favicon.ico', (req, res) => {
+    res.sendFile(path.join(__dirname, 'favicon.ico'));
+});
+
+app.get('/favicon-32.png', (req, res) => {
+    res.sendFile(path.join(__dirname, 'favicon-32.png'));
+});
+
+app.get('/apple-touch-icon.png', (req, res) => {
+    res.sendFile(path.join(__dirname, 'apple-touch-icon.png'));
 });
 
 app.post('/submit', upload.single('photo'), async (req, res) => {
