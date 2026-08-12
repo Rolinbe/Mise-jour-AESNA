@@ -44,6 +44,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+['logo.png', 'favicon.ico', 'favicon-32.png', 'apple-touch-icon.png'].forEach(f => {
+    app.get('/' + f, (req, res) => res.sendFile(path.join(__dirname, f)));
+});
+
 app.post('/submit', upload.single('photo'), async (req, res) => {
     const { nom, prenom, ce1, ce2, adresse, adresse_exacte, tel1, tel2, etablissement1, etablissement2, mention, niveau } = req.body;
     const errors = [];
