@@ -1,4 +1,3 @@
-◇ injected env (4) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+◇ injected env (4) from .env // tip: ⌁ auth for agents [www.vestauth.com]
 Serveur démarré sur http://localhost:3000
-E-mail de notification envoyé.
 E-mail de notification envoyé.

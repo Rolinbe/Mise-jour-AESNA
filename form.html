@@ -241,7 +241,23 @@
                     <h2
                         class="font-label-bold text-label-bold text-secondary uppercase tracking-widest border-b border-surface-variant pb-3">
                         Identification</h2>
-                    <p class="text-helper-text font-helper-text text-outline mt-2">Au moins l'un des deux (N° CE 1 ou 2)
+                    <p class="text-helper-text font-helper-text text-outline mt-2">Les champs marqués d'un * sont
+                        obligatoires.</p>
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <div class="flex-1 flex flex-col gap-2">
+                            <label class="font-label-md text-label-md text-on-surface" for="nom">Nom <span
+                                    class="text-error ml-1">*</span></label>
+                            <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full" id="nom"
+                                name="nom" required="" type="text">
+                        </div>
+                        <div class="flex-1 flex flex-col gap-2">
+                            <label class="font-label-md text-label-md text-on-surface" for="prenom">Prénom <span
+                                    class="text-error ml-1">*</span></label>
+                            <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full" id="prenom"
+                                name="prenom" required="" type="text">
+                        </div>
+                    </div>
+                    <p class="text-helper-text font-helper-text text-outline">Au moins l'un des deux (N° CE 1 ou 2)
                         est obligatoire.</p>
                     <div class="flex flex-col md:flex-row gap-6">
                         <div class="flex-1 flex flex-col gap-2">
@@ -457,7 +473,7 @@
         <div
             class="flex flex-col md:flex-row justify-between items-center w-full px-lg max-w-container-max-width mx-auto gap-6">
             <div class="flex flex-col items-center md:items-start text-secondary gap-1">
-                <span class="font-label-bold text-label-bold text-primary tracking-wide" style="font-size: 20px;">Ho ela
+                <span class="font-label-bold text-label-bold text-primary tracking-wide" style="font-size: 20px; font-family: Arial, Helvetica, sans-serif;">Ho ela
                     velogna AESNA</span>
 
 

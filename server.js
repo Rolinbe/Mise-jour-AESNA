@@ -70,9 +70,11 @@ app.get('/', (req, res) => {
 });
 
 app.post('/submit', upload.single('photo'), async (req, res) => {
-    const { ce1, ce2, adresse, adresse_exacte, tel1, tel2, etablissement1, etablissement2, mention, niveau } = req.body;
+    const { nom, prenom, ce1, ce2, adresse, adresse_exacte, tel1, tel2, etablissement1, etablissement2, mention, niveau } = req.body;
     const errors = [];
 
+    if (!nom) errors.push("Le champ Nom est obligatoire.");
+    if (!prenom) errors.push("Le champ Prénom est obligatoire.");
     if (!ce1 && !ce2) errors.push("Au moins l'un des deux numéros (N° CE 1 ou N° CE 2) est obligatoire.");
     if (!adresse) errors.push("Le champ Adresse est obligatoire.");
     if (!adresse_exacte) errors.push("Le champ Adresse exacte est obligatoire.");
@@ -92,9 +94,10 @@ app.post('/submit', upload.single('photo'), async (req, res) => {
         try {
             await pool.query(
                 `INSERT INTO etudiants
-                 (ce1, ce2, adresse, adresse_exacte, tel1, tel2, etablissement1, etablissement2, mention, niveau, photo)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                 (nom, prenom, ce1, ce2, adresse, adresse_exacte, tel1, tel2, etablissement1, etablissement2, mention, niveau, photo)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
+                    nom, prenom,
                     ce1 || null, ce2 || null,
                     adresse, adresse_exacte,
                     tel1 || null, tel2 || null,
@@ -110,7 +113,7 @@ app.post('/submit', upload.single('photo'), async (req, res) => {
             etabs.forEach(e => { nomsEtabs[e.id] = `${e.nom} (${e.type})`; });
 
             const infos = {
-                ce1: ce1, ce2: ce2, adresse: adresse, adresse_exacte: adresse_exacte,
+                nom: nom, prenom: prenom, ce1: ce1, ce2: ce2, adresse: adresse, adresse_exacte: adresse_exacte,
                 tel1: tel1, tel2: tel2, mention: mention,
                 niveau: niveaux[niveau] || niveau,
                 etablissement1: etablissement1 ? nomsEtabs[Number(etablissement1)] : null,
@@ -191,7 +194,11 @@ async function envoyerNotification(infos) {
                         <td style="padding:24px;">
                             <p style="font-size:14px;color:#051a3e;margin:0 0 20px;">Bonjour,<br>Une nouvelle inscription a été enregistrée dans le formulaire AESNA&nbsp;:</p>
 
-                            ${carte('Identification', item('N° CE 1', secu(infos.ce1)) + item('N° CE 2', secu(infos.ce2)))}
+                            ${carte('Identification',
+                                item('Nom', secu(infos.nom)) +
+                                item('Prénom', secu(infos.prenom)) +
+                                item('N° CE 1', secu(infos.ce1)) +
+                                item('N° CE 2', secu(infos.ce2)))}
 
                             ${carte('Coordonnées',
                                 item('Adresse', secu(infos.adresse)) +
@@ -230,7 +237,7 @@ async function envoyerNotification(infos) {
     await transporter.sendMail({
         from: process.env.MAIL_FROM,
         to: process.env.MAIL_TO,
-        subject: `Nouvelle inscription AESNA — ${infos.ce1 || infos.ce2 || 'étudiant'}`,
+        subject: `Nouvelle inscription AESNA — ${infos.nom} ${infos.prenom}`.trim(),
         text: 'Une nouvelle inscription a été enregistrée. Ouvrez cet e-mail au format HTML pour voir les détails et la photo.',
         html: html,
         attachments: attachments,
