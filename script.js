@@ -155,27 +155,75 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(step);
     }
 
-    function handleFiles(files) {
-        const max = 4 * 1024 * 1024;
-        const tooLarge = [];
-        const accepted = [];
-        Array.from(files).forEach((file) => {
-            if (file.size > max) tooLarge.push(file.name);
-            else accepted.push(file);
+    function compressImage(file) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            const url = URL.createObjectURL(file);
+            img.onload = function () {
+                const MAX_DIM = 1600;
+                let width = img.width;
+                let height = img.height;
+                const ratio = Math.min(MAX_DIM / width, MAX_DIM / height, 1);
+                width = Math.round(width * ratio);
+                height = Math.round(height * ratio);
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, width, height);
+                ctx.drawImage(img, 0, 0, width, height);
+                URL.revokeObjectURL(url);
+                canvas.toBlob((blob) => {
+                    const name = file.name.replace(/\.[^.]+$/, '') + '.jpg';
+                    resolve(new File([blob], name, { type: 'image/jpeg' }));
+                }, 'image/jpeg', 0.8);
+            };
+            img.onerror = function () {
+                URL.revokeObjectURL(url);
+                resolve(file);
+            };
+            img.src = url;
         });
-        selectedFiles = accepted;
+    }
+
+    function handleFiles(files) {
+        const MAX = 8 * 1024 * 1024;
+        const MAX_PDF = 4 * 1024 * 1024;
+        const tooLarge = [];
+        const tasks = [];
+        Array.from(files).forEach((file) => {
+            if (file.size > MAX) {
+                tooLarge.push(file.name);
+                return;
+            }
+            const type = (file.type || '').toLowerCase();
+            if (type.startsWith('image/') || /\.(jpe?g|png)$/i.test(file.name)) {
+                tasks.push(compressImage(file));
+            } else if (file.size > MAX_PDF) {
+                tooLarge.push(file.name + ' (PDF max 4 Mo)');
+            } else {
+                tasks.push(Promise.resolve(file));
+            }
+        });
         if (tooLarge.length > 0 && progressWrap) {
             progressWrap.classList.remove('hidden');
-            progressText.textContent = `${tooLarge.length} fichier(s) trop volumineux (max 4 Mo)`;
+            progressText.textContent = `${tooLarge.length} fichier(s) trop volumineux (max 8 Mo)`;
         }
-        if (selectedFiles.length === 0) return;
-        animateProgressBar(100, 1200, () => {
-            const textEl = dropzone ? dropzone.querySelector('.font-label-md') : null;
-            if (textEl) {
-                textEl.textContent = `${selectedFiles.length} fichier(s) prêt(s) à l'envoi`;
-                textEl.classList.add('text-primary');
-            }
-            if (progressText) progressText.textContent = 'Prêt';
+        if (tasks.length === 0) return;
+        animateProgressBar(60, 800, () => {
+            if (progressText) progressText.textContent = 'Réduction de la photo…';
+        });
+        Promise.all(tasks).then((results) => {
+            selectedFiles = results;
+            animateProgressBar(100, 400, () => {
+                const textEl = dropzone ? dropzone.querySelector('.font-label-md') : null;
+                if (textEl) {
+                    textEl.textContent = `${selectedFiles.length} fichier(s) prêt(s) à l'envoi`;
+                    textEl.classList.add('text-primary');
+                }
+                if (progressText) progressText.textContent = 'Prêt';
+            });
         });
     }
 
