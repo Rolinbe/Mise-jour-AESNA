@@ -60,6 +60,14 @@ app.get('/apple-touch-icon.png', (req, res) => {
     res.sendFile(path.join(__dirname, 'apple-touch-icon.png'));
 });
 
+app.get('/styles.css', (req, res) => {
+    res.sendFile(path.join(__dirname, 'styles.css'));
+});
+
+app.get('/script.js', (req, res) => {
+    res.sendFile(path.join(__dirname, 'script.js'));
+});
+
 app.post('/submit', upload.single('photo'), async (req, res) => {
     const { nom, prenom, ce1, ce2, adresse, adresse_exacte, tel1, tel2, etablissement1, etablissement2, mention, niveau } = req.body;
     const errors = [];

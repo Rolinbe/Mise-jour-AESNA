@@ -6,7 +6,7 @@
   "functions": {
     "api/index.js": {
       "maxDuration": 10,
-      "includeFiles": "index.html,logo.png,favicon.ico,favicon-32.png,apple-touch-icon.png,server.js,api/**"
+      "includeFiles": "**/*"
     }
   }
 }
