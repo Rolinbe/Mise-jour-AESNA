@@ -371,11 +371,11 @@
                     <div class="flex flex-col md:flex-row gap-6">
                         <div class="flex-1 flex flex-col gap-2 relative">
                             <label class="font-label-md text-label-md text-on-surface"
-                                for="etablissement1">Mention <span class="text-error ml-1">*</span></label>
+                                for="mention">Mention <span class="text-error ml-1">*</span></label>
                             <div class="relative">
                                 <select
                                     class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full appearance-none pr-10"
-                                    id="etablissement1" name="etablissement1" required="">
+                                    id="mention" name="mention" required="">
                                     <option value="">Sélectionner...</option>
                                     <option value="1">Informatique(EMIT)</option>
                                     <option value="2">Informatique(ENI)</option>
@@ -398,7 +398,7 @@
                                     <option value="20">Physique et Applications(Faculté des Sciences)</option>
                                     <option value="21">Droit (FDSP)</option>
                                     <option value="22">Sciences Politiques(FDSP)</option>
-                                    <option value="23">Sciences Economiques(FDSP)</option>  
+                                    <option value="23">Sciences Economiques(FDSP)</option>
                                     <option value="24">Histoire et Anthropologie (FLSH)</option>
                                     <option value="25">Géographie et Développement durable (FLSH)</option>
                                     <option value="26">Civilisation et Langue Appliquées (FLSH)</option>
@@ -409,7 +409,7 @@
                                     <option value="31">Formation spécialisée Enseignement (Institut Confucius)</option>
                                     <option value="32">Formation générale (Institut Confucius)</option>
                                     <option value="33">Eau (ISST)</option>
-                                    <option value="34">Agronomie (ISST)</option>   
+                                    <option value="34">Agronomie (ISST)</option>
                                     <option value="35">Technologie (ISTE)</option>
                                     <option value="36">Tourisme (ISTE)</option>
                                     <option value="37">Environnement (ISTE)</option>
@@ -538,10 +538,69 @@
         const progressBar = document.getElementById('progress-bar');
         const progressText = document.getElementById('progress-text');
         const form = document.querySelector('form');
+        const etablissement1 = document.getElementById('etablissement1');
+        const etablissement2 = document.getElementById('etablissement2');
+        const mentionSelect = document.getElementById('mention');
         const API_URL = (location.port === '3000' || location.port === '')
             ? '/submit'
             : 'http://' + location.hostname + ':3000/submit';
         let selectedFiles = [];
+
+        function normalizeText(value) {
+            return (value || '')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, '');
+        }
+
+        function getSelectedEtablissements() {
+            const etablissements = [];
+            [etablissement1, etablissement2].forEach((select) => {
+                if (!select) return;
+                const selected = select.options[select.selectedIndex];
+                if (selected && selected.value) {
+                    etablissements.push(selected.textContent.trim());
+                }
+            });
+            return [...new Set(etablissements)];
+        }
+
+        function updateMentionOptions() {
+            if (!mentionSelect) return;
+
+            const selectedEtablissements = getSelectedEtablissements();
+            const allOptions = Array.from(mentionSelect.options);
+            const placeholder = allOptions.find(option => option.value === '') || new Option('Sélectionner...', '');
+            const mentionOptions = allOptions.filter(option => option.value !== '');
+
+            mentionSelect.innerHTML = '';
+            mentionSelect.appendChild(placeholder);
+
+            const filteredOptions = selectedEtablissements.length === 0
+                ? mentionOptions
+                : mentionOptions.filter((option) => {
+                    const normalizedMention = normalizeText(option.textContent);
+                    return selectedEtablissements.some((etablissement) =>
+                        normalizedMention.includes(normalizeText(etablissement))
+                    );
+                });
+
+            filteredOptions.forEach((option) => {
+                mentionSelect.appendChild(new Option(option.textContent, option.value, false, option.selected));
+            });
+
+            if (filteredOptions.length === 0) {
+                mentionSelect.selectedIndex = 0;
+            }
+        }
+
+        [etablissement1, etablissement2].forEach((select) => {
+            if (!select) return;
+            select.addEventListener('change', updateMentionOptions);
+        });
+
+        updateMentionOptions();
 
         function preventDefaults(e) {
             e.preventDefault();
