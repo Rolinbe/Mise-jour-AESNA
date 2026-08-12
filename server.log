@@ -1,2 +1,3 @@
 ◇ injected env (4) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
 Serveur démarré sur http://localhost:3000
+E-mail de notification envoyé.
