@@ -152,57 +152,68 @@ async function envoyerNotification(infos) {
     const secu = v => escapeHtml(v || '—');
     const attachments = [];
 
-    const html = `<!DOCTYPE html>
+        const html = `<!DOCTYPE html>
 <html lang="fr">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="margin:0;padding:0;background:#e9edff;font-family:Arial,Helvetica,sans-serif;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#e9edff;padding:24px 12px;">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @media screen and (max-width:520px){ .container{padding:16px} .cols{display:block} }
+    </style>
+</head>
+<body style="margin:0;padding:0;background:#f4f6fb;font-family:Inter, Arial, Helvetica, sans-serif;color:#0b2447;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:28px 12px;background:#f4f6fb;">
         <tr>
             <td align="center">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #d8e2ff;box-shadow:0 8px 24px rgba(5,26,62,0.08);">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:680px;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e6eefb;">
                     <tr>
-                        <td style="background:#003d9b;padding:28px 24px;text-align:center;">
-                            <img src="${LOGO_URL}" alt="AESNA" width="90" style="display:block;margin:0 auto 12px;border-radius:12px;">
-                            <div style="font-size:20px;font-weight:bold;color:#ffffff;letter-spacing:0.5px;">Nouvelle inscription</div>
-                            <div style="font-size:13px;color:#c4d2ff;margin-top:4px;">Association des Étudiants</div>
+                        <td style="padding:22px 24px;background:linear-gradient(90deg,#05306b,#0041a8);text-align:center;color:#ffffff;">
+                            <img src="${LOGO_URL}" alt="AESNA" width="84" style="display:block;margin:0 auto 10px;border-radius:10px;">
+                            <h1 style="margin:0;font-size:20px;letter-spacing:0.4px">Nouvelle inscription</h1>
+                            <div style="font-size:13px;opacity:0.9;margin-top:6px">Formulaire AESNA — Notification</div>
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:24px;">
-                            <p style="font-size:14px;color:#051a3e;margin:0 0 20px;">Bonjour,<br>Une nouvelle inscription a été enregistrée dans le formulaire AESNA&nbsp;:</p>
+                        <td style="padding:20px 24px;">
+                            <p style="margin:0 0 16px;font-size:14px;line-height:1.45;color:#12233b">Bonjour,</p>
+                            <p style="margin:0 0 18px;font-size:14px;line-height:1.45;color:#12233b">Une nouvelle inscription a été reçue. Détails ci‑dessous :</p>
 
-                            ${carte('Identification',
-                                item('Nom', secu(infos.nom)) +
-                                item('Prénom', secu(infos.prenom)) +
-                                item('N° CE 1', secu(infos.ce1)) +
-                                item('N° CE 2', secu(infos.ce2)))}
+                            <div class="cols" style="display:flex;gap:16px;align-items:flex-start;">
+                                <div style="flex:1;min-width:220px;">
+                                    ${carte('Identification',
+                                        item('Nom', secu(infos.nom)) +
+                                        item('Prénom', secu(infos.prenom)) +
+                                        item('N° CE 1', secu(infos.ce1)) +
+                                        item('N° CE 2', secu(infos.ce2)))}
 
-                            ${carte('Coordonnées',
-                                item('Adresse', secu(infos.adresse)) +
-                                item('Adresse exacte', secu(infos.adresse_exacte)) +
-                                item('Téléphone 1', secu(infos.tel1)) +
-                                item('Téléphone 2', secu(infos.tel2)))}
+                                    ${carte('Coordonnées',
+                                        item('Adresse', secu(infos.adresse)) +
+                                        item('Adresse exacte', secu(infos.adresse_exacte)) +
+                                        item('Téléphone 1', secu(infos.tel1)) +
+                                        item('Téléphone 2', secu(infos.tel2)))}
 
-                            ${carte('Établissement',
-                                item('Établissement 1', secu(infos.etablissement1)) +
-                                item('Établissement 2', secu(infos.etablissement2)))}
+                                    ${carte('Académique',
+                                        item('Mention', secu(infos.mention)) +
+                                        item('Niveau', secu(infos.niveau)))}
+                                </div>
 
-                            ${carte('Académique',
-                                item('Mention', secu(infos.mention)) +
-                                item('Niveau', secu(infos.niveau)))}
+                                <div style="width:260px;">
+                                    ${carte('Établissement',
+                                        item('Établissement 1', secu(infos.etablissement1)) +
+                                        item('Établissement 2', secu(infos.etablissement2)))}
 
-                            <div style="background:#faf9ff;border:1px solid #e1e8ff;border-radius:12px;padding:16px 20px;">
-                                <div style="font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#003d9b;margin-bottom:10px;">Photo de profil</div>
-                                ${blocPhoto(infos, attachments)}
+                                    <div style="background:#fbfdff;border:1px solid #e9f1ff;border-radius:10px;padding:12px;margin-top:12px;text-align:center;">
+                                        <div style="font-size:12px;color:#036;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;font-weight:700;">Photo</div>
+                                        ${blocPhoto(infos, attachments)}
+                                    </div>
+                                </div>
                             </div>
 
-                            <p style="font-size:12px;color:#737685;text-align:center;margin:20px 0 0;">Inscription reçue le ${new Date().toLocaleString('fr-FR')}</p>
+                            <p style="font-size:12px;color:#667085;text-align:right;margin:18px 0 0">Reçu le ${new Date().toLocaleString('fr-FR')}</p>
                         </td>
                     </tr>
                     <tr>
-                        <td style="background:#e9edff;padding:14px 24px;text-align:center;font-size:12px;color:#434654;">
-                            AESNA — Ho ela velogna AESNA
-                        </td>
+                        <td style="background:#f1f5ff;padding:14px 20px;text-align:center;font-size:12px;color:#536179;">AESNA — Tous droits réservés</td>
                     </tr>
                 </table>
             </td>
