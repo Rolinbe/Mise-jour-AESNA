@@ -253,6 +253,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitButton.textContent = 'Envoi en cours…';
             }
             const formData = new FormData(form);
+            const toLabel = (fieldId) => {
+                const select = document.getElementById(fieldId);
+                if (!select) return;
+                const selected = select.options[select.selectedIndex];
+                if (selected && selected.value) {
+                    formData.set(fieldId, selected.textContent.trim());
+                }
+            };
+            toLabel('etablissement1');
+            toLabel('etablissement2');
+            toLabel('mention');
             if (selectedFiles.length > 0) {
                 formData.delete('photo');
                 formData.append('photo', selectedFiles[0]);
