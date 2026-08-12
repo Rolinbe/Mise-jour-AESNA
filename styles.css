@@ -1,0 +1,80 @@
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Custom Input Styles */
+.ds-input {
+    border: 1px solid #c3c6d6;
+    background-color: #faf9ff;
+    border-radius: 1rem;
+    background-image: linear-gradient(180deg, #ffffff 0%, #f7f9ff 100%);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, transform 0.18s ease;
+    cursor: pointer;
+}
+
+.ds-input:hover {
+    border-color: #7c95d7;
+    background-color: #f7f9ff;
+    transform: translateY(-0.5px);
+}
+
+.ds-input:focus {
+    border-color: #003d9b;
+    box-shadow: 0 0 0 0.2rem rgba(0, 61, 155, 0.12);
+    background-color: #ffffff;
+    outline: none;
+}
+
+.ds-input:active {
+    transform: translateY(0);
+}
+
+.ds-input option {
+    transition: background-color 0.12s ease, color 0.12s ease;
+    background-color: #ffffff;
+    color: #051a3e;
+    padding: 8px 12px;
+}
+
+.ds-input option:hover,
+.ds-input option:checked {
+    background-color: #e9edff;
+    color: #003d9b;
+}
+
+.ds-input:disabled {
+    cursor: not-allowed;
+    opacity: 1;
+    background-color: #fff4f4 !important;
+    background-image: none !important;
+    border-color: #d93025 !important;
+    color: #9e1c14 !important;
+    -webkit-text-fill-color: #9e1c14 !important;
+}
+
+.ds-input:disabled option {
+    background-color: #fff4f4 !important;
+    color: #9e1c14 !important;
+}
+
+.ds-input:focus + .material-symbols-outlined,
+.ds-input:hover + .material-symbols-outlined {
+    transform: rotate(180deg);
+    color: #003d9b;
+}
+
+.ds-input + .material-symbols-outlined {
+    transition: transform 0.25s ease, color 0.25s ease;
+}
+
+/* Custom Dropzone Styles */
+.ds-dropzone {
+    border: 1.5px dashed #c3c6d6;
+    transition: all 0.2s ease;
+    background-color: #faf9ff;
+}
+
+.ds-dropzone:hover {
+    border-color: #003d9b;
+    background-color: #f1f3ff;
+}
