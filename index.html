@@ -225,9 +225,8 @@
     <main class="flex-grow w-full py-16 px-md md:px-lg flex flex-col items-center justify-start">
         <!-- Header Section -->
         <div class="w-full max-w-form-max-width mb-8 text-center">
-            <div class="flex justify-center mb-6"><img
-                    src="/logo.png"
-                    alt="AESNA Logo" class="h-24 w-auto object-contain"></div>
+            <div class="flex justify-center mb-6"><img src="/logo.png" alt="AESNA Logo"
+                    class="h-24 w-auto object-contain"></div>
             <h1 class="font-headline-md text-headline-md text-primary mb-2">Saisie des Données Étudiant</h1>
             <p class="font-body-md text-body-md text-on-surface-variant">Veuillez remplir tous les champs obligatoires
                 pour finaliser votre mise à jours.</p>
@@ -235,13 +234,15 @@
         <!-- Form Container -->
         <div
             class="w-full max-w-form-max-width bg-surface-container-lowest border border-outline-variant rounded-xl shadow-[0_4px_24px_rgba(5,26,62,0.04)] overflow-hidden mb-16">
-            <form class="p-8 md:p-10 flex flex-col gap-10" action="http://localhost:3000/submit" method="POST" enctype="multipart/form-data">
+            <form class="p-8 md:p-10 flex flex-col gap-10" action="http://localhost:3000/submit" method="POST"
+                enctype="multipart/form-data">
                 <!-- Section 1: Identification -->
                 <section class="flex flex-col gap-6">
                     <h2
                         class="font-label-bold text-label-bold text-secondary uppercase tracking-widest border-b border-surface-variant pb-3">
                         Identification</h2>
-                    <p class="text-helper-text font-helper-text text-outline mt-2">Les champs marqués d'un * sont
+                    <p class="text-helper-text font-helper-text text-outline mt-2">Les champs marqués d'un <span
+                            style="color: red;">*</span> sont
                         obligatoires.</p>
                     <div class="flex flex-col md:flex-row gap-6">
                         <div class="flex-1 flex flex-col gap-2">
@@ -253,21 +254,23 @@
                         <div class="flex-1 flex flex-col gap-2">
                             <label class="font-label-md text-label-md text-on-surface" for="prenom">Prénom <span
                                     class="text-error ml-1">*</span></label>
-                            <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full" id="prenom"
-                                name="prenom" required="" type="text">
+                            <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full"
+                                id="prenom" name="prenom" required="" type="text">
                         </div>
                     </div>
-                    <p class="text-helper-text font-helper-text text-outline">Au moins l'un des deux (N° CE 1 ou 2)
+                    <p class="text-helper-text font-helper-text text-outline">Au moins l'un des deux (N° Carte Etudiant
+                        1 ou 2)
                         est obligatoire.</p>
                     <div class="flex flex-col md:flex-row gap-6">
                         <div class="flex-1 flex flex-col gap-2">
-                            <label class="font-label-md text-label-md text-on-surface" for="ce1">N° CE 1 <span
-                                    class="text-error ml-1">*</span></label>
+                            <label class="font-label-md text-label-md text-on-surface" for="ce1">N° Carte Etudiant 1
+                                <span class="text-error ml-1">*</span></label>
                             <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full" id="ce1"
                                 name="ce1" required="" type="text">
                         </div>
                         <div class="flex-1 flex flex-col gap-2">
-                            <label class="font-label-md text-label-md text-on-surface" for="ce2">N° CE 2 </label>
+                            <label class="font-label-md text-label-md text-on-surface" for="ce2">N° Carte Etudiant 2
+                            </label>
                             <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full" id="ce2"
                                 name="ce2" type="text">
                         </div>
@@ -288,7 +291,8 @@
                         <label class="font-label-md text-label-md text-on-surface" for="adresse_exacte">Adresse exacte
                             <span class="text-error ml-1">*</span></label>
                         <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full"
-                            id="adresse_exacte" name="adresse_exacte" type="text" required="" placeholder="ex: A200, B403">
+                            id="adresse_exacte" name="adresse_exacte" type="text" required=""
+                            placeholder="ex: A200, B403">
                     </div>
                     <p class="text-helper-text font-helper-text text-outline mb-2">Au moins l'un des deux numéros est
                         obligatoire.</p>
@@ -326,12 +330,15 @@
                                     <option value="1">EMIT</option>
                                     <option value="2">ENS</option>
                                     <option value="3">ENI</option>
-                                    <option value="4">EGSS-MCI</option> 
-                                    <option value="5">FDSP</option> 
+                                    <option value="4">EGSS-MCI</option>
+                                    <option value="5">FDSP</option>
                                     <option value="7">ISTE</option>
                                     <option value="8">IST</option>
-                                    <option value="9">Faculté des Médecines</option>
-                                    <option value="10">Faculté des Sciences</option>
+                                    <option value="9">ISST</option>
+                                    <option value="10">FLSH</option>
+                                    <option value="11">Institut Confucius</option>
+                                    <option value="12">Faculté des Médecines</option>
+                                    <option value="13">Faculté des Sciences</option>
                                 </select>
                                 <span
                                     class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none"
@@ -362,11 +369,55 @@
                         class="font-label-bold text-label-bold text-secondary uppercase tracking-widest border-b border-surface-variant pb-3">
                         Académique</h2>
                     <div class="flex flex-col md:flex-row gap-6">
-                        <div class="flex-1 flex flex-col gap-2">
-                            <label class="font-label-md text-label-md text-on-surface" for="mention">Mention <span
-                                    class="text-error ml-1">*</span></label>
-                            <input class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full"
-                                id="mention" name="mention" type="text" required="" placeholder="ex: Français(ENS) ...">
+                        <div class="flex-1 flex flex-col gap-2 relative">
+                            <label class="font-label-md text-label-md text-on-surface"
+                                for="etablissement1">Mention <span class="text-error ml-1">*</span></label>
+                            <div class="relative">
+                                <select
+                                    class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full appearance-none pr-10"
+                                    id="etablissement1" name="etablissement1" required="">
+                                    <option value="">Sélectionner...</option>
+                                    <option value="1">Informatique(EMIT)</option>
+                                    <option value="2">Informatique(ENI)</option>
+                                    <option value="3">Francais(ENS)</option>
+                                    <option value="4">Management(EMIT)</option>
+                                    <option value="5">Information et Communication Multimédia(EMIT)</option>
+                                    <option value="7">Mathématique(ENS)</option>
+                                    <option value="8">Physique-Chime(ENS)</option>
+                                    <option value="9">Sciences de l'éducation(ENS)</option>
+                                    <option value="10">Sciences Sociales de Développement(EGSS-MCI)</option>
+                                    <option value="11">Economie-Gestion(EGSS-MCI)</option>
+                                    <option value="12">Marketing-Commerce International(EGSS-MCI)</option>
+                                    <option value="13">Médecine Humaine(Faculté des Médecines)</option>
+                                    <option value="14">Médecine Téchnicien de laboratoire(Faculté des Médecines)</option>
+                                    <option value="15">Maïeutique(Faculté des Médecines)</option>
+                                    <option value="16">Infirmière(Faculté des Médecines)</option>
+                                    <option value="17">Physique-Chimie(Faculté des Sciences)</option>
+                                    <option value="18">Mathématique et Application(Faculté des Sciences)</option>
+                                    <option value="19">Science de la vie(Faculté des Sciences)</option>
+                                    <option value="20">Physique et Applications(Faculté des Sciences)</option>
+                                    <option value="21">Droit (FDSP)</option>
+                                    <option value="22">Sciences Politiques(FDSP)</option>
+                                    <option value="23">Sciences Economiques(FDSP)</option>  
+                                    <option value="24">Histoire et Anthropologie (FLSH)</option>
+                                    <option value="25">Géographie et Développement durable (FLSH)</option>
+                                    <option value="26">Civilisation et Langue Appliquées (FLSH)</option>
+                                    <option value="27">Langue et Monde du Travail(LMT) (FLSH)</option>
+                                    <option value="28">Formation générale (Institut Confucius)</option>
+                                    <option value="29">Langue et Culture Chinoise (Institut Confucius)</option>
+                                    <option value="30">Mandarin (Institut Confucius)</option>
+                                    <option value="31">Formation spécialisée Enseignement (Institut Confucius)</option>
+                                    <option value="32">Formation générale (Institut Confucius)</option>
+                                    <option value="33">Eau (ISST)</option>
+                                    <option value="34">Agronomie (ISST)</option>   
+                                    <option value="35">Technologie (ISTE)</option>
+                                    <option value="36">Tourisme (ISTE)</option>
+                                    <option value="37">Environnement (ISTE)</option>
+                                </select>
+                                <span
+                                    class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none"
+                                    data-icon="expand_more">expand_more</span>
+                            </div>
                         </div>
                         <div class="flex-1 flex flex-col gap-2 relative">
                             <label class="font-label-md text-label-md text-on-surface" for="niveau">Niveau <span
@@ -442,8 +493,7 @@
     <div class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" id="modal-succes">
         <div
             class="bg-surface-container-lowest rounded-xl shadow-[0_8px_32px_rgba(5,26,62,0.2)] p-8 max-w-sm w-full text-center">
-            <img src="/logo.png"
-                alt="AESNA Logo" class="h-20 w-auto object-contain mx-auto mb-4">
+            <img src="/logo.png" alt="AESNA Logo" class="h-20 w-auto object-contain mx-auto mb-4">
             <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Inscription réussie !</h2>
             <p class="font-body-md text-body-md text-on-surface-variant mb-6">Vos données ont bien été enregistrées.</p>
             <button id="btn-fermer-succes"
@@ -455,8 +505,7 @@
     <div class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" id="modal-erreur">
         <div
             class="bg-surface-container-lowest rounded-xl shadow-[0_8px_32px_rgba(5,26,62,0.2)] p-8 max-w-sm w-full text-center">
-            <img src="/logo.png"
-                alt="AESNA Logo" class="h-20 w-auto object-contain mx-auto mb-3">
+            <img src="/logo.png" alt="AESNA Logo" class="h-20 w-auto object-contain mx-auto mb-3">
             <div class="w-16 h-16 rounded-full bg-[#ffdad6] flex items-center justify-center mx-auto mb-4">
                 <span class="material-symbols-outlined text-[#93000a] text-4xl">error</span>
             </div>
@@ -473,14 +522,13 @@
         <div
             class="flex flex-col md:flex-row justify-between items-center w-full px-lg max-w-container-max-width mx-auto gap-6">
             <div class="flex flex-col items-center md:items-start text-secondary gap-1">
-                <span class="font-label-bold text-label-bold text-primary tracking-wide" style="font-size: 20px; font-family: Arial, Helvetica, sans-serif;">Ho ela
+                <span class="font-label-bold text-label-bold text-primary tracking-wide"
+                    style="font-size: 20px; font-family: Arial, Helvetica, sans-serif;">Ho ela
                     velogna AESNA</span>
 
 
             </div>
-            <nav class="flex gap-6"><img
-                    src="/logo.png"
-                    alt="AESNA Logo" class="h-12 w-auto object-contain"></nav>
+            <nav class="flex gap-6"><img src="/logo.png" alt="AESNA Logo" class="h-12 w-auto object-contain"></nav>
         </div>
     </footer>
     <script>
