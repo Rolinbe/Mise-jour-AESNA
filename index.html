@@ -191,14 +191,72 @@
         .ds-input {
             border: 1px solid #c3c6d6;
             background-color: #faf9ff;
-            transition: all 0.2s ease-in-out;
+            border-radius: 1rem;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, transform 0.18s ease;
+            cursor: pointer;
+        }
+
+        .ds-input:hover {
+            border-color: #7c95d7;
+            background-color: #f7f9ff;
+            transform: translateY(-0.5px);
         }
 
         .ds-input:focus {
             border-color: #003d9b;
-            box-shadow: 0 0 0 1px #003d9b;
+            box-shadow: 0 0 0 0.2rem rgba(0, 61, 155, 0.12);
             background-color: #ffffff;
             outline: none;
+        }
+
+        .ds-input:active {
+            transform: translateY(0);
+        }
+
+        .ds-input option {
+            transition: background-color 0.12s ease, color 0.12s ease;
+        }
+
+        .ds-input {
+            border-radius: 0.75rem;
+            background-image: linear-gradient(180deg, #ffffff 0%, #f7f9ff 100%);
+        }
+
+        .ds-input option {
+            background-color: #ffffff;
+            color: #051a3e;
+            padding: 8px 12px;
+        }
+
+        .ds-input option:hover,
+        .ds-input option:checked {
+            background-color: #e9edff;
+            color: #003d9b;
+        }
+
+        .ds-input:disabled {
+            cursor: not-allowed;
+            opacity: 1;
+            background-color: #fff4f4 !important;
+            background-image: none !important;
+            border-color: #d93025 !important;
+            color: #9e1c14 !important;
+            -webkit-text-fill-color: #9e1c14 !important;
+        }
+
+        .ds-input:disabled option {
+            background-color: #fff4f4 !important;
+            color: #9e1c14 !important;
+        }
+
+        .ds-input:focus + .material-symbols-outlined,
+        .ds-input:hover + .material-symbols-outlined {
+            transform: rotate(180deg);
+            color: #003d9b;
+        }
+
+        .ds-input + .material-symbols-outlined {
+            transition: transform 0.25s ease, color 0.25s ease;
         }
 
         /* Custom Dropzone Styles */
@@ -333,12 +391,12 @@
                                     <option value="4">EGSS-MCI</option>
                                     <option value="5">FDSP</option>
                                     <option value="7">ISTE</option>
-                                    <option value="8">IST</option>
-                                    <option value="9">ISST</option>
-                                    <option value="10">FLSH</option>
-                                    <option value="11">Institut Confucius</option>
-                                    <option value="12">Faculté des Médecines</option>
-                                    <option value="13">Faculté des Sciences</option>
+                                    <option value="8">ISST</option>
+                                    <option value="9">FLSH</option>
+                                    <option value="10">Institut Confucius</option>
+                                    <option value="11">Faculté des Médecines</option>
+                                    <option value="12">Faculté des Sciences</option>
+                                    <option value="13">Autre...</option>
                                 </select>
                                 <span
                                     class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none"
@@ -352,9 +410,8 @@
                                 <select
                                     class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full appearance-none pr-10"
                                     id="etablissement2" name="etablissement2">
-                                    <option value="">Sélectionner...</option>
-                                    <option value="1">Université X</option>
-                                    <option value="2">Université Y</option>
+                                    <option value="">Autre Établissement...</option>
+                                    <option value="autre">Autre</option>
                                 </select>
                                 <span
                                     class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none"
@@ -369,10 +426,10 @@
                         class="font-label-bold text-label-bold text-secondary uppercase tracking-widest border-b border-surface-variant pb-3">
                         Académique</h2>
                     <div class="flex flex-col md:flex-row gap-6">
-                        <div class="flex-1 flex flex-col gap-2 relative">
+                        <div class="flex-1 flex flex-col gap-2">
                             <label class="font-label-md text-label-md text-on-surface"
                                 for="mention">Mention <span class="text-error ml-1">*</span></label>
-                            <div class="relative">
+                            <div id="mention-select-container" class="relative">
                                 <select
                                     class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full appearance-none pr-10"
                                     id="mention" name="mention" required="">
@@ -413,10 +470,24 @@
                                     <option value="35">Technologie (ISTE)</option>
                                     <option value="36">Tourisme (ISTE)</option>
                                     <option value="37">Environnement (ISTE)</option>
+                                    <option value="38">Génie Civil (ISTE)</option>
+                                    <option value="39">Autre...</option>
                                 </select>
                                 <span
                                     class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none"
                                     data-icon="expand_more">expand_more</span>
+                            </div>
+                            <div id="mention-manual-container" class="hidden mt-4">
+                                <input
+                                    id="mentionManual"
+                                    name="mention"
+                                    type="text"
+                                    class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full"
+                                    placeholder="Entrez la mention manuellement"
+                                    disabled=""
+                                    required=""
+                                >
+                                <p class="text-helper-text font-helper-text text-outline mt-2">Entrez la mention manuellement si vous avez sélectionné Autre pour l'établissement 2.</p>
                             </div>
                         </div>
                         <div class="flex-1 flex flex-col gap-2 relative">
@@ -541,6 +612,7 @@
         const etablissement1 = document.getElementById('etablissement1');
         const etablissement2 = document.getElementById('etablissement2');
         const mentionSelect = document.getElementById('mention');
+        const mentionOriginalOptions = mentionSelect ? Array.from(mentionSelect.options).map(option => option.cloneNode(true)) : [];
         const API_URL = (location.port === '3000' || location.port === '')
             ? '/submit'
             : 'http://' + location.hostname + ':3000/submit';
@@ -566,41 +638,90 @@
             return [...new Set(etablissements)];
         }
 
+        function getMentionEtablissement(optionText) {
+            const matches = Array.from(optionText.matchAll(/\(([^)]+)\)/g));
+            if (matches.length === 0) return '';
+            return matches[matches.length - 1][1].trim();
+        }
+
         function updateMentionOptions() {
             if (!mentionSelect) return;
 
             const selectedEtablissements = getSelectedEtablissements();
-            const allOptions = Array.from(mentionSelect.options);
+            const selectedMentionValue = mentionSelect.value;
+            const allOptions = mentionOriginalOptions.slice();
             const placeholder = allOptions.find(option => option.value === '') || new Option('Sélectionner...', '');
             const mentionOptions = allOptions.filter(option => option.value !== '');
+            const isDisabled = selectedEtablissements.length === 0;
 
             mentionSelect.innerHTML = '';
-            mentionSelect.appendChild(placeholder);
+            const placeholderClone = placeholder.cloneNode(true);
+            placeholderClone.textContent = isDisabled ? 'Sélectionner un établissement d’abord...' : placeholderClone.textContent;
+            mentionSelect.appendChild(placeholderClone);
 
-            const filteredOptions = selectedEtablissements.length === 0
-                ? mentionOptions
+            const filteredOptions = isDisabled
+                ? []
                 : mentionOptions.filter((option) => {
-                    const normalizedMention = normalizeText(option.textContent);
+                    const mentionEtablissement = getMentionEtablissement(option.textContent);
                     return selectedEtablissements.some((etablissement) =>
-                        normalizedMention.includes(normalizeText(etablissement))
+                        normalizeText(mentionEtablissement) === normalizeText(etablissement)
                     );
                 });
 
             filteredOptions.forEach((option) => {
-                mentionSelect.appendChild(new Option(option.textContent, option.value, false, option.selected));
+                const clonedOption = option.cloneNode(true);
+                clonedOption.selected = option.value !== '' && option.value === selectedMentionValue;
+                mentionSelect.appendChild(clonedOption);
             });
 
-            if (filteredOptions.length === 0) {
+            mentionSelect.disabled = isDisabled;
+            if (isDisabled) {
                 mentionSelect.selectedIndex = 0;
+                mentionSelect.querySelector('option').textContent = 'Veuillez sélectionner d’abord un établissement';
+            } else if (selectedMentionValue && filteredOptions.some(option => option.value === selectedMentionValue)) {
+                mentionSelect.value = selectedMentionValue;
+            } else {
+                mentionSelect.selectedIndex = 0;
+            }
+        }
+
+        const mentionSelectContainer = document.getElementById('mention-select-container');
+        const mentionManualContainer = document.getElementById('mention-manual-container');
+        const mentionManualInput = document.getElementById('mentionManual');
+
+        function toggleMentionInput() {
+            if (!mentionSelect || !mentionManualInput || !mentionSelectContainer || !mentionManualContainer || !etablissement2) return;
+
+            const isOther = etablissement2.value === 'autre';
+            if (isOther) {
+                mentionSelectContainer.classList.add('hidden');
+                mentionManualContainer.classList.remove('hidden');
+                mentionSelect.disabled = true;
+                mentionSelect.required = false;
+                mentionSelect.selectedIndex = 0;
+                mentionManualInput.disabled = false;
+                mentionManualInput.required = true;
+            } else {
+                mentionSelectContainer.classList.remove('hidden');
+                mentionManualContainer.classList.add('hidden');
+                mentionSelect.disabled = false;
+                mentionSelect.required = true;
+                mentionManualInput.disabled = true;
+                mentionManualInput.required = false;
+                mentionManualInput.value = '';
             }
         }
 
         [etablissement1, etablissement2].forEach((select) => {
             if (!select) return;
-            select.addEventListener('change', updateMentionOptions);
+            select.addEventListener('change', () => {
+                updateMentionOptions();
+                toggleMentionInput();
+            });
         });
 
         updateMentionOptions();
+        toggleMentionInput();
 
         function preventDefaults(e) {
             e.preventDefault();
