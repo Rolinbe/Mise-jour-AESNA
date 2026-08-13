@@ -68,6 +68,62 @@ app.get('/script.js', (req, res) => {
     res.sendFile(path.join(__dirname, 'script.js'));
 });
 
+const ETABLISSEMENTS = {
+    1: 'EMIT',
+    2: 'ENS',
+    3: 'ENI',
+    4: 'EGSS-MCI',
+    5: 'FDSP',
+    7: 'ISTE',
+    8: 'ISST',
+    9: 'FLSH',
+    10: 'Institut Confucius',
+    11: 'Faculté des Médecines',
+    12: 'Faculté des Sciences',
+    13: 'Autre...',
+};
+
+const MENTIONS = {
+    1: 'Informatique (EMIT)',
+    2: 'Informatique (ENI)',
+    3: 'Français (ENS)',
+    4: 'Management (EMIT)',
+    5: 'Information et Communication Multimédia (EMIT)',
+    7: 'Mathématique (ENS)',
+    8: 'Physique-Chimie (ENS)',
+    9: 'Sciences de l\'éducation (ENS)',
+    10: 'Sciences Sociales de Développement (EGSS-MCI)',
+    11: 'Economie-Gestion (EGSS-MCI)',
+    12: 'Marketing-Commerce International (EGSS-MCI)',
+    13: 'Médecine Humaine (Faculté des Médecines)',
+    14: 'Médecine Technicien de laboratoire (Faculté des Médecines)',
+    15: 'Maïeutique (Faculté des Médecines)',
+    16: 'Infirmière (Faculté des Médecines)',
+    17: 'Physique-Chimie (Faculté des Sciences)',
+    18: 'Mathématique et Application (Faculté des Sciences)',
+    19: 'Science de la vie (Faculté des Sciences)',
+    20: 'Physique et Applications (Faculté des Sciences)',
+    21: 'Droit (FDSP)',
+    22: 'Sciences Politiques (FDSP)',
+    23: 'Sciences Economiques (FDSP)',
+    24: 'Histoire et Anthropologie (FLSH)',
+    25: 'Géographie et Développement durable (FLSH)',
+    26: 'Civilisation et Langue Appliquées (FLSH)',
+    27: 'Langue et Monde du Travail (LMT) (FLSH)',
+    28: 'Formation générale (Institut Confucius)',
+    29: 'Langue et Culture Chinoise (Institut Confucius)',
+    30: 'Mandarin (Institut Confucius)',
+    31: 'Formation spécialisée Enseignement (Institut Confucius)',
+    32: 'Formation générale (Institut Confucius)',
+    33: 'Eau (ISST)',
+    34: 'Agronomie (ISST)',
+    35: 'Technologie (ISTE)',
+    36: 'Tourisme (ISTE)',
+    37: 'Environnement (ISTE)',
+    38: 'Génie Civil (ISTE)',
+    39: 'Autre...',
+};
+
 app.post('/submit', upload.single('photo'), async (req, res) => {
     const { nom, prenom, ce1, ce2, adresse, adresse_exacte, tel1, tel2, etablissement1, etablissement2, mention, niveau } = req.body;
     const errors = [];
@@ -98,10 +154,11 @@ app.post('/submit', upload.single('photo'), async (req, res) => {
 
         const infos = {
             nom: nom, prenom: prenom, ce1: ce1, ce2: ce2, adresse: adresse, adresse_exacte: adresse_exacte,
-            tel1: tel1, tel2: tel2, mention: mention,
+            tel1: tel1, tel2: tel2,
+            mention: MENTIONS[mention] || mention,
             niveau: niveaux[niveau] || niveau,
-            etablissement1: etablissement1 || null,
-            etablissement2: etablissement2 || null,
+            etablissement1: ETABLISSEMENTS[etablissement1] || etablissement1 || null,
+            etablissement2: etablissement2 === 'autre' ? 'Autre' : (etablissement2 || null),
             photo: photo,
         };
 
