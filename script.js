@@ -335,4 +335,114 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
-PY
+
+/* ===================== CursorGlow ===================== */
+(function initCursorGlow() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    const creerElement = (className) => {
+        const el = document.createElement('div');
+        el.className = className;
+        document.body.appendChild(el);
+        return el;
+    };
+
+    const glow = creerElement('cursor-glow');
+    const ring = creerElement('cursor-ring');
+    const dot = creerElement('cursor-dot');
+
+    if (isTouch) {
+        glow.style.display = 'none';
+        ring.style.display = 'none';
+        dot.style.display = 'none';
+        return;
+    }
+
+    const INTERACTIF = 'a, button, input, select, textarea, label, .ds-dropzone';
+
+    const cible = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    const positions = {
+        dot: { x: cible.x, y: cible.y },
+        ring: { x: cible.x, y: cible.y },
+        glow: { x: cible.x, y: cible.y },
+    };
+
+    const facteurs = { dot: 0.65, ring: 0.28, glow: 0.10 };
+    const precedente = { x: cible.x, y: cible.y };
+
+    let scale = 1;
+    let scaleCible = 1;
+    let visible = false;
+
+    window.addEventListener('mousemove', (e) => {
+        cible.x = e.clientX;
+        cible.y = e.clientY;
+        if (!visible) {
+            visible = true;
+            glow.style.opacity = '1';
+            ring.style.opacity = '1';
+            dot.style.opacity = '1';
+        }
+    });
+
+    document.addEventListener('mouseleave', () => {
+        visible = false;
+        glow.style.opacity = '0';
+        ring.style.opacity = '0';
+        dot.style.opacity = '0';
+    });
+
+    document.addEventListener('mouseenter', () => {
+        visible = true;
+        glow.style.opacity = '1';
+        ring.style.opacity = '1';
+        dot.style.opacity = '1';
+    });
+
+    document.addEventListener('mouseover', (e) => {
+        if (e.target.closest(INTERACTIF)) scaleCible = 1.6;
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        if (e.target.closest(INTERACTIF)) scaleCible = 1;
+    });
+
+    const appliquer = (el, p, stretchX, stretchY, angle, echelle) => {
+        el.style.transform =
+            `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) ` +
+            `rotate(${angle}rad) scale(${stretchX * echelle}, ${stretchY * echelle})`;
+    };
+
+    function animate() {
+        const vx = cible.x - precedente.x;
+        const vy = cible.y - precedente.y;
+        precedente.x = cible.x;
+        precedente.y = cible.y;
+
+        const vitesse = Math.hypot(vx, vy);
+        const angle = Math.atan2(vy, vx);
+        const etirement = Math.min(vitesse * 0.018, 0.75);
+
+        const sx = 1 + etirement;
+        const sy = 1 - etirement * 0.45;
+
+        scale += (scaleCible - scale) * 0.16;
+
+        Object.keys(positions).forEach((nom) => {
+            const p = positions[nom];
+            const facteur = facteurs[nom];
+            p.x += (cible.x - p.x) * facteur;
+            p.y += (cible.y - p.y) * facteur;
+        });
+
+        appliquer(dot, positions.dot, 1, 1, 0, scale);
+        appliquer(ring, positions.ring, sx, sy, angle, scale);
+        appliquer(glow, positions.glow, sx, sy, angle, scale);
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+})();

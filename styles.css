@@ -78,3 +78,48 @@
     border-color: #003d9b;
     background-color: #f1f3ff;
 }
+
+/* ===================== CursorGlow ===================== */
+.cursor-glow,
+.cursor-ring,
+.cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    will-change: transform, opacity;
+    transition: opacity 0.4s ease;
+}
+
+.cursor-glow {
+    width: 400px;
+    height: 400px;
+    z-index: 20;
+    background: radial-gradient(circle,
+            rgba(0, 61, 155, 0.13) 0%,
+            rgba(178, 197, 255, 0.08) 38%,
+            rgba(178, 197, 255, 0) 68%);
+    filter: blur(3px);
+}
+
+.cursor-ring {
+    width: 36px;
+    height: 36px;
+    z-index: 21;
+    border: 1.5px solid rgba(0, 61, 155, 0.55);
+    box-shadow:
+        0 0 18px rgba(0, 61, 155, 0.35),
+        inset 0 0 10px rgba(178, 197, 255, 0.4);
+}
+
+.cursor-dot {
+    width: 7px;
+    height: 7px;
+    z-index: 22;
+    background: #003d9b;
+    box-shadow:
+        0 0 10px rgba(0, 61, 155, 0.9),
+        0 0 24px rgba(0, 61, 155, 0.5);
+}
