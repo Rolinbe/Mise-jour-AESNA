@@ -44,17 +44,18 @@
 
 .ds-input:disabled {
     cursor: not-allowed;
+    pointer-events: none;
     opacity: 1;
-    background-color: #fff4f4 !important;
+    background-color: #ffffff !important;
     background-image: none !important;
     border-color: #d93025 !important;
-    color: #9e1c14 !important;
-    -webkit-text-fill-color: #9e1c14 !important;
+    color: #ba1a1a !important;
+    -webkit-text-fill-color: #ba1a1a !important;
 }
 
 .ds-input:disabled option {
-    background-color: #fff4f4 !important;
-    color: #9e1c14 !important;
+    background-color: #ffffff !important;
+    color: #ba1a1a !important;
 }
 
 .ds-input:focus + .material-symbols-outlined,

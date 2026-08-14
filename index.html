@@ -182,7 +182,7 @@
             },
         }
     </script>
-    <link rel="stylesheet" href="/styles.css?v=2">
+    <link rel="stylesheet" href="/styles.css?v=4">
 </head>
 
 <body class="bg-surface-container-low text-on-surface font-body-md min-h-screen flex flex-col antialiased">
@@ -335,11 +335,11 @@
                     <div class="flex flex-col md:flex-row gap-6">
                         <div class="flex-1 flex flex-col gap-2">
                             <label class="font-label-md text-label-md text-on-surface"
-                                for="mention">Mention <span class="text-error ml-1">*</span></label>
-                            <div id="mention-select-container" class="relative">
+                                for="mention1">Mention 1 <span class="text-error ml-1">*</span></label>
+                            <div id="mention1-select-container" class="relative">
                                 <select
                                     class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full appearance-none pr-10"
-                                    id="mention" name="mention" required="">
+                                    id="mention1" name="mention1" required="">
                                     <option value="">Sélectionner...</option>
                                     <option value="Informatique(EMIT)">Informatique(EMIT)</option>
                                     <option value="Informatique(ENI)">Informatique(ENI)</option>
@@ -384,10 +384,13 @@
                                     class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none"
                                     data-icon="expand_more">expand_more</span>
                             </div>
-                            <div id="mention-manual-container" class="hidden mt-4">
+                            <p id="mention1-warning"
+                                class="hidden text-helper-text font-helper-text text-error mt-2">Veuillez sélectionner
+                                d'abord un établissement.</p>
+                            <div id="mention1-manual-container" class="hidden mt-4">
                                 <input
-                                    id="mentionManual"
-                                    name="mention"
+                                    id="mention1Manual"
+                                    name="mention1"
                                     type="text"
                                     class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full"
                                     placeholder="Entrez la mention manuellement"
@@ -397,26 +400,93 @@
                                 <p class="text-helper-text font-helper-text text-outline mt-2">Entrez la mention manuellement si vous avez sélectionné Autre pour l'établissement 2.</p>
                             </div>
                         </div>
-                        <div class="flex-1 flex flex-col gap-2 relative">
-                            <label class="font-label-md text-label-md text-on-surface" for="niveau">Niveau <span
-                                    class="text-error ml-1">*</span></label>
-                            <div class="relative">
+                        <div class="flex-1 flex flex-col gap-2">
+                            <label class="font-label-md text-label-md text-on-surface"
+                                for="mention2">Mention 2</label>
+                            <div id="mention2-select-container" class="relative">
                                 <select
                                     class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full appearance-none pr-10"
-                                    id="niveau" name="niveau" required="">
-                                    <option value="">Sélectionner le niveau...</option>
-                                    <option value="l1">L1</option>
-                                    <option value="l2">L2</option>
-                                    <option value="l3">L3</option>
-                                    <option value="m1">M1</option>
-                                    <option value="m2">M2</option>
+                                    id="mention2" name="mention2">
+                                    <option value="">Sélectionner...</option>
+                                    <option value="Informatique(EMIT)">Informatique(EMIT)</option>
+                                    <option value="Informatique(ENI)">Informatique(ENI)</option>
+                                    <option value="Francais(ENS)">Francais(ENS)</option>
+                                    <option value="Management(EMIT)">Management(EMIT)</option>
+                                    <option value="Information et Communication Multimédia(EMIT)">Information et Communication Multimédia(EMIT)</option>
+                                    <option value="Mathématique(ENS)">Mathématique(ENS)</option>
+                                    <option value="Physique-Chime(ENS)">Physique-Chime(ENS)</option>
+                                    <option value="Sciences de l'éducation(ENS)">Sciences de l'éducation(ENS)</option>
+                                    <option value="Sciences Sociales de Développement(EGSS-MCI)">Sciences Sociales de Développement(EGSS-MCI)</option>
+                                    <option value="Economie-Gestion(EGSS-MCI)">Economie-Gestion(EGSS-MCI)</option>
+                                    <option value="Marketing-Commerce International(EGSS-MCI)">Marketing-Commerce International(EGSS-MCI)</option>
+                                    <option value="Médecine Humaine(Faculté des Médecines)">Médecine Humaine(Faculté des Médecines)</option>
+                                    <option value="Médecine Téchnicien de laboratoire(Faculté des Médecines)">Médecine Téchnicien de laboratoire(Faculté des Médecines)</option>
+                                    <option value="Maïeutique(Faculté des Médecines)">Maïeutique(Faculté des Médecines)</option>
+                                    <option value="Infirmière(Faculté des Médecines)">Infirmière(Faculté des Médecines)</option>
+                                    <option value="Physique-Chimie(Faculté des Sciences)">Physique-Chimie(Faculté des Sciences)</option>
+                                    <option value="Mathématique et Application(Faculté des Sciences)">Mathématique et Application(Faculté des Sciences)</option>
+                                    <option value="Science de la vie(Faculté des Sciences)">Science de la vie(Faculté des Sciences)</option>
+                                    <option value="Physique et Applications(Faculté des Sciences)">Physique et Applications(Faculté des Sciences)</option>
+                                    <option value="Droit (FDSP)">Droit (FDSP)</option>
+                                    <option value="Sciences Politiques(FDSP)">Sciences Politiques(FDSP)</option>
+                                    <option value="Sciences Economiques(FDSP)">Sciences Economiques(FDSP)</option>
+                                    <option value="Histoire et Anthropologie (FLSH)">Histoire et Anthropologie (FLSH)</option>
+                                    <option value="Géographie et Développement durable (FLSH)">Géographie et Développement durable (FLSH)</option>
+                                    <option value="Civilisation et Langue Appliquées (FLSH)">Civilisation et Langue Appliquées (FLSH)</option>
+                                    <option value="Langue et Monde du Travail(LMT) (FLSH)">Langue et Monde du Travail(LMT) (FLSH)</option>
+                                    <option value="Formation générale (Institut Confucius)">Formation générale (Institut Confucius)</option>
+                                    <option value="Langue et Culture Chinoise (Institut Confucius)">Langue et Culture Chinoise (Institut Confucius)</option>
+                                    <option value="Mandarin (Institut Confucius)">Mandarin (Institut Confucius)</option>
+                                    <option value="Formation spécialisée Enseignement (Institut Confucius)">Formation spécialisée Enseignement (Institut Confucius)</option>
+                                    <option value="Formation générale (Institut Confucius)">Formation générale (Institut Confucius)</option>
+                                    <option value="Eau (ISST)">Eau (ISST)</option>
+                                    <option value="Agronomie (ISST)">Agronomie (ISST)</option>
+                                    <option value="Technologie (ISTE)">Technologie (ISTE)</option>
+                                    <option value="Tourisme (ISTE)">Tourisme (ISTE)</option>
+                                    <option value="Environnement (ISTE)">Environnement (ISTE)</option>
+                                    <option value="Génie Civil (ISTE)">Génie Civil (ISTE)</option>
+                                    <option value="Autre...">Autre...</option>
                                 </select>
                                 <span
                                     class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none"
                                     data-icon="expand_more">expand_more</span>
                             </div>
+                            <p id="mention2-warning"
+                                class="hidden text-helper-text font-helper-text text-error mt-2">Veuillez sélectionner
+                                d'abord un établissement.</p>
+                            <div id="mention2-manual-container" class="hidden mt-4">
+                                <input
+                                    id="mention2Manual"
+                                    name="mention2"
+                                    type="text"
+                                    class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full"
+                                    placeholder="Entrez la mention manuellement"
+                                    disabled=""
+                                >
+                                <p class="text-helper-text font-helper-text text-outline mt-2">Entrez la mention manuellement si vous avez sélectionné Autre pour l'établissement 2.</p>
+                            </div>
                         </div>
-                    </div>                </section>
+                    </div>
+                    <div class="flex flex-col md:w-1/2 gap-2 relative">
+                        <label class="font-label-md text-label-md text-on-surface" for="niveau">Niveau <span
+                                class="text-error ml-1">*</span></label>
+                        <div class="relative">
+                            <select
+                                class="ds-input rounded-md px-4 py-2.5 font-body-md text-on-surface w-full appearance-none pr-10"
+                                id="niveau" name="niveau" required="">
+                                <option value="">Sélectionner le niveau...</option>
+                                <option value="l1">L1</option>
+                                <option value="l2">L2</option>
+                                <option value="l3">L3</option>
+                                <option value="m1">M1</option>
+                                <option value="m2">M2</option>
+                            </select>
+                            <span
+                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none"
+                                data-icon="expand_more">expand_more</span>
+                        </div>
+                    </div>
+                </section>
                 <!-- Section 5: Documents -->
                 <section class="flex flex-col gap-6">
                     <h2
@@ -508,7 +578,7 @@
             <nav class="flex gap-6"><img src="/logo.png" alt="AESNA Logo" class="h-12 w-auto object-contain"></nav>
         </div>
     </footer>
-        <script src="/script.js?v=4"></script>
+        <script src="/script.js?v=7"></script>
 
 </body>
 

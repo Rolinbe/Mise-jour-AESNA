@@ -125,7 +125,7 @@ const MENTIONS = {
 };
 
 app.post('/submit', upload.single('photo'), async (req, res) => {
-    const { nom, prenom, ce1, ce2, adresse, adresse_exacte, tel1, tel2, etablissement1, etablissement2, mention, niveau } = req.body;
+    const { nom, prenom, ce1, ce2, adresse, adresse_exacte, tel1, tel2, etablissement1, etablissement2, mention1, mention2, niveau } = req.body;
     const errors = [];
 
     if (!nom) errors.push("Le champ Nom est obligatoire.");
@@ -134,7 +134,7 @@ app.post('/submit', upload.single('photo'), async (req, res) => {
     if (!adresse) errors.push("Le champ Adresse est obligatoire.");
     if (!adresse_exacte) errors.push("Le champ Adresse exacte est obligatoire.");
     if (!tel1 && !tel2) errors.push("Au moins l'un des deux numéros de téléphone est obligatoire.");
-    if (!mention) errors.push("Le champ Mention est obligatoire.");
+    if (!mention1) errors.push("Le champ Mention 1 est obligatoire.");
     if (!['l1', 'l2', 'l3', 'm1', 'm2'].includes(niveau)) errors.push("Le champ Niveau est obligatoire.");
     if (!etablissement1 && !etablissement2) errors.push("Au moins l'un des deux établissements est obligatoire.");
 
@@ -155,7 +155,8 @@ app.post('/submit', upload.single('photo'), async (req, res) => {
         const infos = {
             nom: nom, prenom: prenom, ce1: ce1, ce2: ce2, adresse: adresse, adresse_exacte: adresse_exacte,
             tel1: tel1, tel2: tel2,
-            mention: MENTIONS[mention] || mention,
+            mention: MENTIONS[mention1] || mention1,
+            mention2: MENTIONS[mention2] || mention2 || null,
             niveau: niveaux[niveau] || niveau,
             etablissement1: ETABLISSEMENTS[etablissement1] || etablissement1 || null,
             etablissement2: etablissement2 === 'autre' ? 'Autre' : (etablissement2 || null),
@@ -245,7 +246,8 @@ async function envoyerNotification(infos) {
                                 item('Établissement 2', secu(infos.etablissement2)))}
 
                             ${carte('Académique',
-                                item('Mention', secu(infos.mention)) +
+                                item('Mention 1', secu(infos.mention)) +
+                                item('Mention 2', secu(infos.mention2)) +
                                 item('Niveau', secu(infos.niveau)))}
 
                             <div style="background:#faf9ff;border:1px solid #e1e8ff;border-radius:12px;padding:16px 20px;">

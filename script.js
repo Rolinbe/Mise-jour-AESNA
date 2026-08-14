@@ -7,8 +7,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('form');
     const etablissement1 = document.getElementById('etablissement1');
     const etablissement2 = document.getElementById('etablissement2');
-    const mentionSelect = document.getElementById('mention');
-    const mentionOriginalOptions = mentionSelect ? Array.from(mentionSelect.options).map(option => option.cloneNode(true)) : [];
+    const mentionFields = [
+        {
+            select: document.getElementById('mention1'),
+            selectContainer: document.getElementById('mention1-select-container'),
+            manualContainer: document.getElementById('mention1-manual-container'),
+            manualInput: document.getElementById('mention1Manual'),
+            warning: document.getElementById('mention1-warning'),
+            manual: false,
+            required: true,
+        },
+        {
+            select: document.getElementById('mention2'),
+            selectContainer: document.getElementById('mention2-select-container'),
+            manualContainer: document.getElementById('mention2-manual-container'),
+            manualInput: document.getElementById('mention2Manual'),
+            warning: document.getElementById('mention2-warning'),
+            manual: true,
+            required: false,
+        },
+    ];
+    mentionFields.forEach((field) => {
+        field.originalOptions = field.select
+            ? Array.from(field.select.options).map(option => option.cloneNode(true))
+            : [];
+    });
     const API_URL = (location.port === '3000' || location.port === '')
         ? '/submit'
         : 'http://' + location.hostname + ':3000/submit';
@@ -41,19 +64,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateMentionOptions() {
-        if (!mentionSelect) return;
+        mentionFields.forEach(updateMentionField);
+    }
+
+    function updateMentionField(field) {
+        if (!field.select) return;
 
         const selectedEtablissements = getSelectedEtablissements();
-        const selectedMentionValue = mentionSelect.value;
-        const allOptions = mentionOriginalOptions.slice();
+        const selectedMentionValue = field.select.value;
+        const allOptions = field.originalOptions.slice();
         const placeholder = allOptions.find(option => option.value === '') || new Option('Sélectionner...', '');
         const mentionOptions = allOptions.filter(option => option.value !== '');
         const isDisabled = selectedEtablissements.length === 0;
 
-        mentionSelect.innerHTML = '';
+        field.select.innerHTML = '';
         const placeholderClone = placeholder.cloneNode(true);
         placeholderClone.textContent = isDisabled ? 'Veuillez sélectionner d’abord un établissement' : placeholderClone.textContent;
-        mentionSelect.appendChild(placeholderClone);
+        field.select.appendChild(placeholderClone);
 
         const filteredOptions = isDisabled
             ? []
@@ -67,43 +94,42 @@ document.addEventListener('DOMContentLoaded', () => {
         filteredOptions.forEach((option) => {
             const clonedOption = option.cloneNode(true);
             clonedOption.selected = option.value !== '' && option.value === selectedMentionValue;
-            mentionSelect.appendChild(clonedOption);
+            field.select.appendChild(clonedOption);
         });
 
-        mentionSelect.disabled = isDisabled;
+        field.select.disabled = isDisabled;
+        if (field.warning && !isDisabled) {
+            field.warning.classList.add('hidden');
+        }
         if (isDisabled) {
-            mentionSelect.selectedIndex = 0;
+            field.select.selectedIndex = 0;
         } else if (selectedMentionValue && filteredOptions.some(option => option.value === selectedMentionValue)) {
-            mentionSelect.value = selectedMentionValue;
+            field.select.value = selectedMentionValue;
         } else {
-            mentionSelect.selectedIndex = 0;
+            field.select.selectedIndex = 0;
         }
     }
 
-    const mentionSelectContainer = document.getElementById('mention-select-container');
-    const mentionManualContainer = document.getElementById('mention-manual-container');
-    const mentionManualInput = document.getElementById('mentionManual');
-
-    function toggleMentionInput() {
-        if (!mentionSelect || !mentionManualInput || !mentionSelectContainer || !mentionManualContainer || !etablissement2) return;
+    function toggleMentionField(field) {
+        if (!field.manual) return;
+        if (!field.select || !field.manualInput || !field.selectContainer || !field.manualContainer || !etablissement2) return;
 
         const isOther = etablissement2.value === 'autre';
         if (isOther) {
-            mentionSelectContainer.classList.add('hidden');
-            mentionManualContainer.classList.remove('hidden');
-            mentionSelect.disabled = true;
-            mentionSelect.required = false;
-            mentionSelect.selectedIndex = 0;
-            mentionManualInput.disabled = false;
-            mentionManualInput.required = true;
+            field.selectContainer.classList.add('hidden');
+            field.manualContainer.classList.remove('hidden');
+            field.select.disabled = true;
+            field.select.required = false;
+            field.select.selectedIndex = 0;
+            field.manualInput.disabled = false;
+            field.manualInput.required = field.required;
         } else {
-            mentionSelectContainer.classList.remove('hidden');
-            mentionManualContainer.classList.add('hidden');
-            mentionSelect.disabled = false;
-            mentionSelect.required = true;
-            mentionManualInput.disabled = true;
-            mentionManualInput.required = false;
-            mentionManualInput.value = '';
+            field.selectContainer.classList.remove('hidden');
+            field.manualContainer.classList.add('hidden');
+            field.select.required = field.required;
+            field.manualInput.disabled = true;
+            field.manualInput.required = false;
+            field.manualInput.value = '';
         }
     }
 
@@ -111,12 +137,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!select) return;
         select.addEventListener('change', () => {
             updateMentionOptions();
-            toggleMentionInput();
+            mentionFields.forEach(toggleMentionField);
         });
     });
 
     updateMentionOptions();
-    toggleMentionInput();
+    mentionFields.forEach(toggleMentionField);
+
+    mentionFields.forEach((field) => {
+        if (!field.selectContainer || !field.select) return;
+        field.selectContainer.addEventListener('click', () => {
+            if (field.select.disabled && field.warning) {
+                field.warning.classList.remove('hidden');
+                clearTimeout(field._warningTimer);
+                field._warningTimer = setTimeout(() => field.warning.classList.add('hidden'), 4000);
+            }
+        });
+    });
 
     function preventDefaults(e) {
         e.preventDefault();
@@ -263,7 +300,8 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             toLabel('etablissement1');
             toLabel('etablissement2');
-            toLabel('mention');
+            toLabel('mention1');
+            toLabel('mention2');
             if (selectedFiles.length > 0) {
                 formData.delete('photo');
                 formData.append('photo', selectedFiles[0]);
