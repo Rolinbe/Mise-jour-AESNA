@@ -32,6 +32,20 @@ document.addEventListener('DOMContentLoaded', () => {
             ? Array.from(field.select.options).map(option => option.cloneNode(true))
             : [];
     });
+    const etablissementFields = [
+        {
+            select: etablissement1,
+            manualContainer: document.getElementById('etablissement1-manual-container'),
+            manualInput: document.getElementById('etablissement1Manual'),
+            required: true,
+        },
+        {
+            select: etablissement2,
+            manualContainer: document.getElementById('etablissement2-manual-container'),
+            manualInput: document.getElementById('etablissement2Manual'),
+            required: false,
+        },
+    ];
     const API_URL = (location.port === '3000' || location.port === '')
         ? '/submit'
         : 'http://' + location.hostname + ':3000/submit';
@@ -110,11 +124,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function isAutreValue(value) {
+        return normalizeText(value) === 'autre';
+    }
+
+    function toggleEtablissementField(field) {
+        if (!field.select || !field.manualInput || !field.manualContainer) return;
+
+        const isOther = isAutreValue(field.select.value);
+        if (isOther) {
+            field.manualContainer.classList.remove('hidden');
+            field.manualInput.disabled = false;
+            field.manualInput.required = field.required;
+        } else {
+            field.manualContainer.classList.add('hidden');
+            field.manualInput.disabled = true;
+            field.manualInput.required = false;
+            field.manualInput.value = '';
+        }
+    }
+
     function toggleMentionField(field) {
         if (!field.manual) return;
         if (!field.select || !field.manualInput || !field.selectContainer || !field.manualContainer || !etablissement2) return;
 
-        const isOther = etablissement2.value === 'autre';
+        const isOther = [etablissement1, etablissement2].some((select) => select && isAutreValue(select.value));
         if (isOther) {
             field.selectContainer.classList.add('hidden');
             field.manualContainer.classList.remove('hidden');
@@ -136,11 +170,13 @@ document.addEventListener('DOMContentLoaded', () => {
     [etablissement1, etablissement2].forEach((select) => {
         if (!select) return;
         select.addEventListener('change', () => {
+            etablissementFields.forEach(toggleEtablissementField);
             updateMentionOptions();
             mentionFields.forEach(toggleMentionField);
         });
     });
 
+    etablissementFields.forEach(toggleEtablissementField);
     updateMentionOptions();
     mentionFields.forEach(toggleMentionField);
 
@@ -292,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData(form);
             const toLabel = (fieldId) => {
                 const select = document.getElementById(fieldId);
-                if (!select) return;
+                if (!select || select.disabled) return;
                 const selected = select.options[select.selectedIndex];
                 if (selected && selected.value) {
                     formData.set(fieldId, selected.textContent.trim());
@@ -302,6 +338,11 @@ document.addEventListener('DOMContentLoaded', () => {
             toLabel('etablissement2');
             toLabel('mention1');
             toLabel('mention2');
+            etablissementFields.forEach((field) => {
+                if (field.select && field.manualInput && isAutreValue(field.select.value)) {
+                    formData.set(field.select.name, field.manualInput.value.trim());
+                }
+            });
             if (selectedFiles.length > 0) {
                 formData.delete('photo');
                 formData.append('photo', selectedFiles[0]);
